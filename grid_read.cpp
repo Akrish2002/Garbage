@@ -12,7 +12,7 @@ int main(){
     std::vector<double> grid_coords; //Dynamic to append value
 
     std::ifstream grid_file("g641x065uf.dat");
-    std::cout<<"Reading file";
+    std::cout<<"Reading file"<<std::endl;
 
     if(!grid_file.is_open()){
         std::cerr<<"Error opening file"<<std::endl;
@@ -24,10 +24,10 @@ int main(){
     std::stringstream ss(row);
 
     while(std::getline(ss, item, seperator)){
-        grid_coords.push_back(std::stod(item));
+        grid_coords.push_back(stof(item));
     }
 
-    //std::cout<<grid_coords<<std::endl;
+    //std::cout<<grid_coords[0]<<std::endl<<grid_coords[1]<<std::endl;
 
     return 0;
 }
