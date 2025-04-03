@@ -4,24 +4,24 @@
 #include <sstream>
 #include <vector>
 
-int main(){
+void read_grid(   
+    std::string fpath, 
+    std::vector<std::vector<double>>& twoD_grid_coords, 
+    int& nx, 
+    int& ny)
+{
 
     std::string row;
     std::string item;
     char seperator = ',';
     std::vector<double> grid_coords; //Dynamic to append value
-    std::vector<std::vector<double>> twoD_grid_coords;
     
-    //Initializing sizes nx, ny
-    int nx;
-    int ny;
-
-    std::ifstream grid_file("g641x065uf.dat");
+    std::string fname = fpath + ".dat"; 
+    std::ifstream grid_file(fname);
     std::cout<<"Reading file"<<std::endl;
 
     if(!grid_file.is_open()){
         std::cerr<<"Error opening file"<<std::endl;
-        return 1;
     }
 
     //Reading first line
@@ -52,5 +52,4 @@ int main(){
     grid_file.close();
     std::cout<<"Finished reading file "<<std::endl;
 
-    return 0;
 }
