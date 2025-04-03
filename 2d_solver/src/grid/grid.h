@@ -1,6 +1,6 @@
 //Include guard
-#ifndef CFD_GRID
-#define CFD_GRID
+#ifndef CFD_GRID_GRID_H
+#define CFD_GRID_GRID_H
 
 #include <vector>
 #include <array>
