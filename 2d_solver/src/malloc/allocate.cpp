@@ -5,8 +5,8 @@
 
 /*Parameters required:
  * ------------------
- *  int         r   : Rows
- *  int         c   : Columns
+ *  int         r       : Rows
+ *  int         c       : Columns
  *  double**    grid    : 2D array of pointers for 2D grid
  */
 
