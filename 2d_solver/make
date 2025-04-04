@@ -1,0 +1,2 @@
+g++ -I src/malloc -I src/io -I src/grid -o cfd_test main.cpp src/io/grid_read.cpp src/malloc/allocate.cpp src/io/grid.cpp
+

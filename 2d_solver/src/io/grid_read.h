@@ -5,9 +5,9 @@
 #include <vector>
 #include <string>
 
-void read_grid(
+void grid_read(
 	std::string fpath,
-	std::vector<std::vector<double>>& twoD_grid_coords,
+	std::vector<std::vector<double>>& coords_2D,
 	int& nx,
 	int& ny
 );

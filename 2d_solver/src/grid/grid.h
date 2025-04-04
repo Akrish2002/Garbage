@@ -9,26 +9,28 @@
 
 // Grid Class
 // 2D grid reader and additional fucntions
-//
 
 class Grid
 {
     private:
-        std::string m_file;
-        bool m_write;
-        std::vector<std::vector<double>> m_coords;
-        int m_nx, m_ny, m_nz;
+        std::string file;
+        bool write;
+        std::vector<std::vector<double>> coords_2D;
+        int nx, ny;
+        
+        std::vector<std::vector<double>> grid_2D;        
 
     public:
         //Constructor
-        Grid(std::string file, /*Luis had one more here*/ bool write=false);
+        Grid(std::string file, bool write = false);
 
         //Functions
         void addHaloCells();
         void computeMetrics();
 
         //Destructor
-        ~Grid();
-}
+        //Initially implemented destructor, but read online that it is not necessary as the memor          y is deallocated once it goes out of scope. 
+        // ~Grid();
+};
 
 #endif

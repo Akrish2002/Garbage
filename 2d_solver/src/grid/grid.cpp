@@ -1,3 +1,5 @@
+#include "grid_read.h"
+#include "allocate.h"
 #include "grid.h"
 
 #include <vector>
@@ -5,10 +7,6 @@
 #include <string>
 #include <array>
 
-//Including functions to perform read, write of grid files
-#include "grid_read.cpp"
-//#include "grid_write.cpp"
-//#include "grid_metrics.cpp"
 
 /* Constructor to read grid file
  *
@@ -18,14 +16,27 @@
  *
  */
 
-Grid:Grid(std::string file, int nhc, bool write)
+Grid::Grid(std::string file, bool write)
 {
 
-    m_file = file;
-    
-    read_grid(m_file, m_coords, m_nx, m_ny);
+    //Reading grid coords
+    grid_read(file, coords_2D, nx, ny);
 
     //Allocating memory
-    allocate3D
+    allocate_2D(nx, ny, grid_2D);
+
+    //Assigning coords value to allocated grid
+    grid_2D = coords_2D;
+    
+    std::cout<<"--2D array of coordinates have been assigned"<<std::endl;
+    std::cout<<grid_2D[1][1]<<std::endl;
+}
+
+
+void addHaloCells()
+{
+    
+
+
 
 } 

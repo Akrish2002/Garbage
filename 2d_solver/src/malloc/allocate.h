@@ -3,7 +3,7 @@
 
 #include <vector>
 
-void allocate2D(int r, int c, std::vector<std::vector<double>>& grid);
+void allocate_2D(int r, int c, std::vector<std::vector<double>>& grid_2D);
 
 #endif
 
