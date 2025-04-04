@@ -16,6 +16,6 @@
 void allocate2D(int r, int c, std::vector<std::vector<double>>& grid)
 {
     	//Resizing grid to r and c and initializing with zero values
-	grid.assign(r, std::vector<double>(c, 1.0));
+	grid.assign(r, std::vector<double>(c, 0.0));
     
 }
