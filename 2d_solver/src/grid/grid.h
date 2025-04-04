@@ -10,6 +10,7 @@
 // Grid Class
 // 2D grid reader and additional fucntions
 
+//Have to code it to output files to plot the halo cells, normal grid and  binary or .dat 
 class Grid
 {
     private:
