@@ -13,8 +13,9 @@
 
 //Maybe add a std::cout for error in allocation and/or initialization
 
-void allocate2D(int r, int c, const std::vector<std::vector<double>>& grid)
+void allocate2D(int r, int c, std::vector<std::vector<double>>& grid)
 {
-    std::vector<std::vector<double>> grid(r, std::vector<double>(c, 0.0));
+    	//Resizing grid to r and c and initializing with zero values
+	grid.assign(r, std::vector<double>(c, 1.0));
     
 }

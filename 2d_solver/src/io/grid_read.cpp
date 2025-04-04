@@ -1,3 +1,5 @@
+#include "grid_read.h"
+
 #include <fstream> //To read and write from files
 #include <iostream>
 #include <string>
