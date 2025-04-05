@@ -1,5 +1,3 @@
-#include "grid_read.h"
-#include "allocate.h"
 #include "grid.h"
 
 #include <vector>
@@ -7,6 +5,10 @@
 #include <string>
 #include <array>
 #include <cstddef> //For size_t
+
+#include "read.h"
+#include "allocate.h"
+#include "write.h"
 
 /* Constructor to read grid file
  *
@@ -16,11 +18,11 @@
  *
  */
 
-Grid::Grid(std::string file, bool write)
+Grid::Grid(std::string fpath, bool write)
 {
 
     //Reading grid coords
-    grid_read(file, coords_2D, nx, ny);
+    read(fpath, coords_2D, nx, ny);
     int coords_nx = coords_2D.size();
     int coords_ny = coords_2D[0].size();
 
@@ -124,4 +126,5 @@ void Grid::addHaloCells_2D()
 //       std::cout<<"--[1,1] Ghost Grid value x and y : "<<grid_ghost_2D[1][1].x<<" "<<grid_ghost_2D[1][1].y<<std::endl;
 //       std::cout<<"--[1,2] Ghost Grid value x and y : "<<grid_ghost_2D[1][2].x<<" "<<grid_ghost_2D[1][2].y<<std::endl;
         std::cout<<"\n\n--Ghost cells have been added"<<std::endl; 
+        exportGridToCSV(grid_ghost_2D, fpath);
 } 

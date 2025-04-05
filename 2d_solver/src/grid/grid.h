@@ -6,7 +6,6 @@
 #include <array>
 #include <string>
 
-
 // Grid Class
 // 2D grid reader and additional fucntions
 
@@ -21,7 +20,7 @@ class Grid
 {
     private:
 
-        std::string file;
+        std::string fpath;
         bool write;
         int nx, ny;
         std::vector<std::vector<Point>> grid_2D; 
