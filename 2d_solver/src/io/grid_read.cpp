@@ -52,8 +52,8 @@ void grid_read(
     }   
     
     grid_file.close();
-    std::cout<<"--Coord_2D size: "<<coords_2D.size()<<" "<<coords_2D[0].size()<<std::endl;
-    std::cout<<"--Grid_2D size: "<<nx<<" "<<ny<<std::endl;
+//   std::cout<<"--Coord_2D size: "<<coords_2D.size()<<" "<<coords_2D[0].size()<<std::endl;
+//   std::cout<<"--Grid_2D size: "<<nx<<" "<<ny<<std::endl;
     std::cout<<"--Finished reading file "<<"\n\n";
 
 }

@@ -40,8 +40,9 @@ Grid::Grid(std::string file, bool write)
     }
 
     std::cout<<"--2D coords have been transformed and assigned to grid_2D"<<"\n\n";
-    std::cout<<"--[1,1] Grid Value x and y : "<<grid_2D[1][1].x<<" "<<grid_2D[1][1].y<<std::endl;
-    std::cout<<"--[1,2] Grid Value x and y : "<<grid_2D[1][2].x<<" "<<grid_2D[1][2].y<<std::endl;
+//   std::cout<<"--[0,0] Grid Value x and y : "<<grid_2D[0][0].x<<" "<<grid_2D[0][0].y<<std::endl;
+//   std::cout<<"--[1,1] Grid Value x and y : "<<grid_2D[0][1].x<<" "<<grid_2D[0][1].y<<std::endl;
+//   std::cout<<"--[1,2] Grid Value x and y : "<<grid_2D[0][2].x<<" "<<grid_2D[0][2].y<<std::endl;
 }
 
 /*Parameters required:
@@ -58,8 +59,8 @@ void Grid::addHaloCells_2D()
         
         size_t cols_ghost = cols + 2; //Increased by two for ghost cells
         size_t rows_ghost = rows + 2;
-        std::cout<<"--Rows_ghost: "<<rows_ghost<<std::endl;        
-        std::cout<<"--Columns_ghost: "<<cols_ghost<<std::endl;        
+//       std::cout<<"--Rows_ghost: "<<rows_ghost<<std::endl;        
+//       std::cout<<"--Columns_ghost: "<<cols_ghost<<std::endl;        
 
         //Allocating memory for ghost grid 
         allocate_2D(rows_ghost, cols_ghost, grid_ghost_2D);
@@ -88,7 +89,8 @@ void Grid::addHaloCells_2D()
             grid_ghost_2D[rows_ghost - 1][j + 1].x = 2*grid_2D[rows - 1][j].x - 
                                                        grid_2D[rows - 2][j].x; 
         }
-   
+        std::cout<<"--Row value assignment is fine!";
+
         //Assigning interior values
         for (size_t i = 0; i < rows; ++i) 
         {
@@ -98,25 +100,28 @@ void Grid::addHaloCells_2D()
             }
         }
         
-        //Assigning corner x values
+        
+        //Top Left 
         grid_ghost_2D[0][0].x = 2*grid_ghost_2D[0][1].x - grid_ghost_2D[0][2].x;
+        grid_ghost_2D[0][0].y = 2*grid_ghost_2D[0][1].y - grid_ghost_2D[0][2].y;
+
+        //Top Right 
         grid_ghost_2D[0][cols_ghost - 1].x = 2*grid_ghost_2D[0][cols_ghost - 2].x 
                                            - grid_ghost_2D[0][cols_ghost - 3].x;
-        grid_ghost_2D[rows_ghost - 1][0].x = 2*grid_ghost_2D[0][1].x - grid_ghost_2D[0][2].x;
-        grid_ghost_2D[rows_ghost - 1][cols_ghost - 1].x = 2*grid_ghost_2D[0][cols_ghost - 2].x
-                                                          - grid_ghost_2D[0][2].x;
-        
-        //Assigning corner y values
-        grid_ghost_2D[0][0].y = 2*grid_ghost_2D[0][1].y - grid_ghost_2D[0][2].y;
         grid_ghost_2D[0][cols_ghost - 1].y = 2*grid_ghost_2D[0][cols_ghost - 2].y 
                                            - grid_ghost_2D[0][cols_ghost - 3].y;
-        grid_ghost_2D[rows_ghost - 1][0].y = 2*grid_ghost_2D[0][1].y - grid_ghost_2D[0][2].y;
-        grid_ghost_2D[rows_ghost - 1][cols_ghost - 1].y = 2*grid_ghost_2D[0][cols_ghost - 2].y
-                                                          - grid_ghost_2D[0][2].x;
-
         
-        std::cout<<"--[1,0] Ghost Grid value x and y : "<<grid_ghost_2D[1][0].x<<" "<<2*grid_ghost_2D[1][0].y<<std::endl;
-        std::cout<<"--[1,1] Ghost Grid value x and y : "<<grid_ghost_2D[1][1].x<<" "<<2*grid_ghost_2D[1][1].y<<std::endl;
-        std::cout<<"--[1,2] Ghost Grid value x and y : "<<grid_ghost_2D[1][2].x<<" "<<2*grid_ghost_2D[1][2].y<<std::endl;
+        //Bottom Left
+        grid_ghost_2D[rows_ghost - 1][0].x = 2*grid_ghost_2D[rows_ghost - 1][1].x - grid_ghost_2D[rows_ghost - 1][2].x;
+        grid_ghost_2D[rows_ghost - 1][0].y = 2*grid_ghost_2D[rows_ghost - 1][1].y - grid_ghost_2D[rows_ghost - 1][2].y;
+        
+        //Bottom Right
+        grid_ghost_2D[rows_ghost - 1][cols_ghost - 1].x = 2*grid_ghost_2D[rows_ghost - 1][cols_ghost - 2].x - grid_ghost_2D[rows_ghost - 1][cols_ghost - 3].x;
+        grid_ghost_2D[rows_ghost - 1][cols_ghost - 1].y = 2*grid_ghost_2D[rows_ghost - 1][cols_ghost - 2].y - grid_ghost_2D[rows_ghost - 1][cols_ghost - 3].y;
+
+
+//       std::cout<<"--[1,0] Ghost Grid value x and y : "<<grid_ghost_2D[1][0].x<<" "<<grid_ghost_2D[1][0].y<<std::endl;
+//       std::cout<<"--[1,1] Ghost Grid value x and y : "<<grid_ghost_2D[1][1].x<<" "<<grid_ghost_2D[1][1].y<<std::endl;
+//       std::cout<<"--[1,2] Ghost Grid value x and y : "<<grid_ghost_2D[1][2].x<<" "<<grid_ghost_2D[1][2].y<<std::endl;
         std::cout<<"\n\n--Ghost cells have been added"<<std::endl; 
 } 
