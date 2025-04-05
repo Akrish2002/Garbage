@@ -69,10 +69,10 @@ void Grid::addHaloCells_2D()
         for(size_t i = 0; i < rows; i++)
         {
             
-            grid_ghost_2D[i+1][0].x = grid_2D[i][0].x - grid_2D[i][1].x;
-            grid_ghost_2D[i+1][cols_ghost - 1].x = grid_2D[i][cols - 1].x - grid_2D[i][cols - 2].x;
-            grid_ghost_2D[i+1][0].y = grid_2D[i][0].y - grid_2D[i][1].y;
-            grid_ghost_2D[i+1][cols_ghost - 1].y = grid_2D[i][cols - 1].y - grid_2D[i][cols - 2].y;
+            grid_ghost_2D[i+1][0].x = 2*grid_2D[i][0].x - grid_2D[i][1].x;
+            grid_ghost_2D[i+1][cols_ghost - 1].x = 2*grid_2D[i][cols - 1].x - grid_2D[i][cols - 2].x;
+            grid_ghost_2D[i+1][0].y = 2*grid_2D[i][0].y - grid_2D[i][1].y;
+            grid_ghost_2D[i+1][cols_ghost - 1].y = 2*grid_2D[i][cols - 1].y - grid_2D[i][cols - 2].y;
         }
         std::cout<<"--Column value assignment is fine!"<<std::endl;
    
@@ -80,13 +80,13 @@ void Grid::addHaloCells_2D()
         for(size_t j = 0; j < cols; j++)
         {
             
-            grid_ghost_2D[0][j+1].y = grid_2D[0][j].y - grid_2D[1][j].y;
-            grid_ghost_2D[rows_ghost - 1][j + 1].y = grid_2D[rows - 1][j].y - 
-                                                 grid_2D[rows - 2][j].y; 
+            grid_ghost_2D[0][j+1].y = 2*grid_2D[0][j].y - grid_2D[1][j].y;
+            grid_ghost_2D[rows_ghost - 1][j + 1].y = 2*grid_2D[rows - 1][j].y - 
+                                                       grid_2D[rows - 2][j].y; 
 
-            grid_ghost_2D[0][j+1].x = grid_2D[0][j].x - grid_2D[1][j].x;
-            grid_ghost_2D[rows_ghost - 1][j + 1].x = grid_2D[rows - 1][j].x - 
-                                                 grid_2D[rows - 2][j].x; 
+            grid_ghost_2D[0][j+1].x = 2*grid_2D[0][j].x - grid_2D[1][j].x;
+            grid_ghost_2D[rows_ghost - 1][j + 1].x = 2*grid_2D[rows - 1][j].x - 
+                                                       grid_2D[rows - 2][j].x; 
         }
    
         //Assigning interior values
@@ -99,22 +99,24 @@ void Grid::addHaloCells_2D()
         }
         
         //Assigning corner x values
-        grid_ghost_2D[0][0].x = grid_ghost_2D[0][1].x - grid_ghost_2D[0][2].x;
-        grid_ghost_2D[0][cols_ghost - 1].x = grid_ghost_2D[0][cols_ghost - 2].x 
+        grid_ghost_2D[0][0].x = 2*grid_ghost_2D[0][1].x - grid_ghost_2D[0][2].x;
+        grid_ghost_2D[0][cols_ghost - 1].x = 2*grid_ghost_2D[0][cols_ghost - 2].x 
                                            - grid_ghost_2D[0][cols_ghost - 3].x;
-        grid_ghost_2D[rows_ghost - 1][0].x = grid_ghost_2D[0][1].x - grid_ghost_2D[0][2].x;
-        grid_ghost_2D[rows_ghost - 1][cols_ghost - 1].x = grid_ghost_2D[0][cols_ghost - 2].x;
+        grid_ghost_2D[rows_ghost - 1][0].x = 2*grid_ghost_2D[0][1].x - grid_ghost_2D[0][2].x;
+        grid_ghost_2D[rows_ghost - 1][cols_ghost - 1].x = 2*grid_ghost_2D[0][cols_ghost - 2].x
+                                                          - grid_ghost_2D[0][2].x;
         
         //Assigning corner y values
-        grid_ghost_2D[0][0].y = grid_ghost_2D[0][1].y - grid_ghost_2D[0][2].y;
-        grid_ghost_2D[0][cols_ghost - 1].y = grid_ghost_2D[0][cols_ghost - 2].y 
+        grid_ghost_2D[0][0].y = 2*grid_ghost_2D[0][1].y - grid_ghost_2D[0][2].y;
+        grid_ghost_2D[0][cols_ghost - 1].y = 2*grid_ghost_2D[0][cols_ghost - 2].y 
                                            - grid_ghost_2D[0][cols_ghost - 3].y;
-        grid_ghost_2D[rows_ghost - 1][0].y = grid_ghost_2D[0][1].y - grid_ghost_2D[0][2].y;
-        grid_ghost_2D[rows_ghost - 1][cols_ghost - 1].y = grid_ghost_2D[0][cols_ghost - 2].y;
+        grid_ghost_2D[rows_ghost - 1][0].y = 2*grid_ghost_2D[0][1].y - grid_ghost_2D[0][2].y;
+        grid_ghost_2D[rows_ghost - 1][cols_ghost - 1].y = 2*grid_ghost_2D[0][cols_ghost - 2].y
+                                                          - grid_ghost_2D[0][2].x;
 
         
-        std::cout<<"--[1,0] Ghost Grid value x and y : "<<grid_2D[1][0].x<<" "<<grid_2D[1][0].y<<std::endl;
-        std::cout<<"--[1,1] Ghost Grid value x and y : "<<grid_2D[1][1].x<<" "<<grid_2D[1][1].y<<std::endl;
-        std::cout<<"--[1,2] Ghost Grid value x and y : "<<grid_2D[1][2].x<<" "<<grid_2D[1][2].y<<std::endl;
+        std::cout<<"--[1,0] Ghost Grid value x and y : "<<grid_ghost_2D[1][0].x<<" "<<2*grid_ghost_2D[1][0].y<<std::endl;
+        std::cout<<"--[1,1] Ghost Grid value x and y : "<<grid_ghost_2D[1][1].x<<" "<<2*grid_ghost_2D[1][1].y<<std::endl;
+        std::cout<<"--[1,2] Ghost Grid value x and y : "<<grid_ghost_2D[1][2].x<<" "<<2*grid_ghost_2D[1][2].y<<std::endl;
         std::cout<<"\n\n--Ghost cells have been added"<<std::endl; 
 } 
