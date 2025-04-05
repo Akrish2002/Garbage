@@ -126,5 +126,5 @@ void Grid::addHaloCells_2D()
 //       std::cout<<"--[1,1] Ghost Grid value x and y : "<<grid_ghost_2D[1][1].x<<" "<<grid_ghost_2D[1][1].y<<std::endl;
 //       std::cout<<"--[1,2] Ghost Grid value x and y : "<<grid_ghost_2D[1][2].x<<" "<<grid_ghost_2D[1][2].y<<std::endl;
         std::cout<<"\n\n--Ghost cells have been added"<<std::endl; 
-        exportGridToCSV(grid_ghost_2D, fpath);
+        exportGridToCSV(grid_ghost_2D, "grid_ghost_2D.csv");
 } 
