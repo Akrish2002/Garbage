@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-//#include "grid.h"
+//Maybe add a std::cout for error in allocation and/or initialization
 
 /*Parameters required:
  * ------------------
@@ -11,10 +11,6 @@
  *  int         c       : Columns
  *  double**    grid    : 2D array of pointers for 2D grid
  */
-
-
-//Maybe add a std::cout for error in allocation and/or initialization
-
 void allocate_2D(int r, int c, std::vector<std::vector<Point>>& grid_2D)
 {
    	//Resizing grid to r and c and initializing with zero values
