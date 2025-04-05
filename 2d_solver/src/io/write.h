@@ -7,6 +7,6 @@
 
 #include "grid.h"
 
-void exportGridToCSV(std::vector<std::vector<Point>>& grid, std::string fpath) 
+void exportGridToCSV(const std::vector<std::vector<Point>>& grid, std::string fpath);
 
 #endif

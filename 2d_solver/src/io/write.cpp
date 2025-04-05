@@ -6,16 +6,15 @@
 
 #include "grid.h"
 
-void exportGridToCSV(std::vector<std::vector<Point>> grid, std::string fpath) 
+void exportGridToCSV(const std::vector<std::vector<Point>>& grid, std::string fpath) 
 {
-    std::string fname = fpath + ".dat";
+    std::string fname = fpath;
     std::ofstream file(fname);
     if (!file.is_open()) 
         {
-            std::cerr << "Error opening file: " << filename << std::endl;
+            std::cerr << "Error opening file: " << fname << std::endl;
             return;
         }
-}
 
     size_t rows = grid.size();
     size_t cols = grid[0].size();
@@ -29,6 +28,6 @@ void exportGridToCSV(std::vector<std::vector<Point>> grid, std::string fpath)
     }
 
     file.close();
-    std::cout << "--CSV export complete: " << filename << std::endl;
+    std::cout << "--CSV export complete: " << fname << std::endl;
 }
 
