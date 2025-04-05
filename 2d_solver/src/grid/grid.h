@@ -10,23 +10,30 @@
 // Grid Class
 // 2D grid reader and additional fucntions
 
+struct Point
+{    
+ double x;
+ double y;
+};
+ 
 //Have to code it to output files to plot the halo cells, normal grid and  binary or .dat 
 class Grid
 {
     private:
+
         std::string file;
         bool write;
-        std::vector<std::vector<double>> coords_2D;
         int nx, ny;
-        
-        std::vector<std::vector<double>> grid_2D;        
+        std::vector<std::vector<Point>> grid_2D; 
+        std::vector<std::vector<Point>> grid_ghost_2D; 
+        std::vector<std::vector<double>> coords_2D;
 
     public:
         //Constructor
         Grid(std::string file, bool write = false);
 
         //Functions
-        void addHaloCells();
+        void addHaloCells_2D();
         void computeMetrics();
 
         //Destructor

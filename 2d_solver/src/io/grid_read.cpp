@@ -20,7 +20,7 @@ void grid_read(
     
     std::string fname = fpath + ".dat"; 
     std::ifstream grid_file(fname);
-    std::cout<<"--Reading file"<<std::endl;
+    std::cout<<"\n--Reading file"<<std::endl;
 
     if(!grid_file.is_open()){
         std::cerr<<"Error opening file"<<std::endl;
@@ -52,6 +52,8 @@ void grid_read(
     }   
     
     grid_file.close();
-    std::cout<<"--Finished reading file "<<std::endl;
+    std::cout<<"--Coord_2D size: "<<coords_2D.size()<<" "<<coords_2D[0].size()<<std::endl;
+    std::cout<<"--Grid_2D size: "<<nx<<" "<<ny<<std::endl;
+    std::cout<<"--Finished reading file "<<"\n\n";
 
 }
