@@ -29,8 +29,6 @@ Grid::Grid(std::string fpath, bool write)
     //Allocating memory
     allocate_2D(nx, ny, grid_2D);
     
-    //grid_2D = coords_2D;
-
     //Assigning coords value to allocated grid
     for(int j = 0; j < ny; j++)    
     {
@@ -91,7 +89,7 @@ void Grid::addHaloCells_2D()
             grid_ghost_2D[rows_ghost - 1][j + 1].x = 2*grid_2D[rows - 1][j].x - 
                                                        grid_2D[rows - 2][j].x; 
         }
-        std::cout<<"--Row value assignment is fine!";
+        std::cout<<"--Row value assignment is fine!"<<std::endl;
 
         //Assigning interior values
         for (size_t i = 0; i < rows; ++i) 
@@ -125,6 +123,9 @@ void Grid::addHaloCells_2D()
 //       std::cout<<"--[1,0] Ghost Grid value x and y : "<<grid_ghost_2D[1][0].x<<" "<<grid_ghost_2D[1][0].y<<std::endl;
 //       std::cout<<"--[1,1] Ghost Grid value x and y : "<<grid_ghost_2D[1][1].x<<" "<<grid_ghost_2D[1][1].y<<std::endl;
 //       std::cout<<"--[1,2] Ghost Grid value x and y : "<<grid_ghost_2D[1][2].x<<" "<<grid_ghost_2D[1][2].y<<std::endl;
-        std::cout<<"\n\n--Ghost cells have been added"<<std::endl; 
+        std::cout<<"--Ghost cells have been added"<<"\n\n"; 
+        
         exportGridToCSV(grid_ghost_2D, "grid_ghost_2D.csv");
+        exportGridToCSV(grid_2D, "grid_2D.csv");
+        std::cout<<std::endl;
 } 

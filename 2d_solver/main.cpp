@@ -1,6 +1,7 @@
 #include "read.h"
 #include "allocate.h"
 #include "grid.h"
+#include "write.h"
 
 #include <iostream>
 #include <vector>
@@ -17,5 +18,6 @@ int main()
 	
     Grid grid(fpath);
     grid.addHaloCells_2D();
+
 	return 0;
 }

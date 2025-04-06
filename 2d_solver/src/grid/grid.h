@@ -34,7 +34,8 @@ class Grid
         //Functions
         void addHaloCells_2D();
         void computeMetrics();
-
+        
+         
         //Destructor
         //Initially implemented destructor, but read online that it is not necessary as the memor          y is deallocated once it goes out of scope. 
         // ~Grid();
