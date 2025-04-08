@@ -49,7 +49,7 @@ Grid::Grid(std::string fpath, bool write)
  * ------------------
  *  vector<<vector<double>>     : grid of 2D points
  */
-void Grid::addHaloCells_2D()
+void Grid::AddHaloCells_2D()
 {
         //Recommended practice to use size_t instead of int
         size_t rows = grid_2D.size(); 
@@ -128,4 +128,14 @@ void Grid::addHaloCells_2D()
         exportGridToCSV(grid_ghost_2D, "grid_ghost_2D.csv");
         exportGridToCSV(grid_2D, "grid_2D.csv");
         std::cout<<std::endl;
-} 
+}
+
+void Grid::ComputeMetrics()
+{
+    
+    void ComputeCellVol();
+    void ComputeProjCellFaceArea();
+
+
+
+}
