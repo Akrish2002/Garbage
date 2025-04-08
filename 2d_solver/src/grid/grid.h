@@ -25,7 +25,7 @@ class Grid
         int nx, ny;
         std::vector<std::vector<double>> coords_2D;
         
-        std::vector<std::vector<Point>> grid_2D, grid_ghost_2D; 
+        std::vector<std::vector<Point>> n_2D, n_g_2D, cc_2D; 
 
     public:
         //Constructor
