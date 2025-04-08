@@ -21,6 +21,6 @@ This file tracks pending improvements and cleanup tasks for the 2D finite-volume
 
 ---
 
-_Last updated: April 8, 2025
-_Time: 15:59
+_Last updated: April 8, 2025_
+_Time: 15:59_
 
