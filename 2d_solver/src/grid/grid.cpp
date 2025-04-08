@@ -45,10 +45,32 @@ Grid::Grid(std::string fpath, bool write)
 //   std::cout<<"--[1,2] Grid Value x and y : "<<grid_2D[0][2].x<<" "<<grid_2D[0][2].y<<std::endl;
 }
 
+/* Parameters required:
+ * -------------------
+ *  None
+ *
+ *  Adds halo cells and computes all metrics
+ */
+
+void Grid::ComputeMetrics(int dim)
+{
+    if(dim == 2)
+    {
+         AddHaloCells_2D(); 
+         //ComputeCellVol();
+         ComputeProjCellFaceArea();
+    }
+
+}
+
+
 /*Parameters required:
  * ------------------
- *  vector<<vector<double>>     : grid of 2D points
+ * None, calls values from the object of Grid class 
+ *
+ * Add halo cells
  */
+
 void Grid::AddHaloCells_2D()
 {
         //Recommended practice to use size_t instead of int
@@ -130,11 +152,18 @@ void Grid::AddHaloCells_2D()
         std::cout<<std::endl;
 }
 
-void Grid::ComputeMetrics()
+/*Parameters Required:
+ * ------------------
+ *
+ *Computes the projected cell face area
+ */
+
+void Grid::ComputeProjCellFaceArea()
 {
     
-    void ComputeCellVol();
-    void ComputeProjCellFaceArea();
+
+
+
 
 
 
