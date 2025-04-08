@@ -13,14 +13,14 @@ This file tracks pending improvements and cleanup tasks for the 2D finite-volume
 - [ ] **Create a `data/` folder**  
   Move all grid input files to a dedicated `data` directory to keep the project organized.
 
-- [ ] **Create an `output/` folder**  
+- [ ] **Create an `output/` folder**   
   Dump simulation results and visualizations into a separate `output` directory to declutter the root.
 
-- [ ] **Hardcoded ghost cell values**
+- [ ] **Hardcoded ghost cell values**<br>
   Edit the Grid class to have optional number of ghost cells, not just two --> which leads to editing the AddHaloCells() function to include that
 
 ---
 
-_Last updated: April 8, 2025_
+_Last updated: April 8, 2025_<br>
 _Time: 15:59_
 
