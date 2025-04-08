@@ -176,7 +176,7 @@ void Grid::ComputeProjCellFaceArea()
 //   std::cout<<"\n--Size of cf_xi_2D: "<<cf_xi_2D.size()<<" "<<cf_xi_2D[0].size()<<std::endl;
 
     double x_eta, y_eta;
-    for(size_t i = 0; i < cf_xi_2D.size(); i++)
+    for(size_t i = 0; i < cf_xi_2D.size() - 1; i++)
     {
         for(size_t j = 0; j < cf_xi_2D[0].size(); j++)
         {
@@ -188,10 +188,8 @@ void Grid::ComputeProjCellFaceArea()
   
     }  
   
-    std::cout<<"--Projected Cell face areas have been computed!"<<std::endl;
-        
     double x_xi, y_xi;
-    for(size_t j = 0; j < cf_eta_2D[0].size(); j++)
+    for(size_t j = 0; j < cf_eta_2D[0].size() - 1; j++)
     {
         for(size_t i = 0; i < cf_eta_2D.size(); i++)
         {
@@ -204,5 +202,6 @@ void Grid::ComputeProjCellFaceArea()
     }  
     
     std::cout<<"--Projected Cell face areas have been computed!"<<std::endl;
-
+    exportScalarFieldToCSV(cf_xi_2D, "cf_xi_2D.csv");
+    exportScalarFieldToCSV(cf_eta_2D, "cf_eta_2D.csv");
 }
