@@ -13,8 +13,8 @@
 
 int main()
 {
-    
-	std::string fpath = "data/g641x065uf";
+
+    std::string fpath = "data/g641x065uf";
 	
     Grid grid(fpath);
     grid.ComputeMetrics(2);
