@@ -8,6 +8,6 @@
 #include "grid.h"
 
 void exportGridToCSV(const std::vector<std::vector<Point>>& pt, std::string fpath);
-void exportScalarFieldToCSV(const std::vector<std::vector<double>>& field, const std::string& fpath) 
+void exportScalarFieldToCSV(const std::vector<std::vector<double>>& field, const std::string& fpath);
 
 #endif
