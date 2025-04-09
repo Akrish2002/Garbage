@@ -18,6 +18,6 @@ int main()
 	
     Grid grid(fpath);
     grid.ComputeMetrics(2);
-
-	return 0;
+	
+    return 0;
 }
