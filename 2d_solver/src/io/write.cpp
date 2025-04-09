@@ -11,7 +11,7 @@ void exportGridToCSV(const std::vector<std::vector<Point>>& grid, std::string fp
     std::ofstream file(std::string("output/") + fpath);
     if (!file.is_open()) 
         {
-            std::cerr << "Error opening file: " << fname << std::endl;
+            std::cerr << "Error opening file: " << fpath << std::endl;
             return;
         }
 
@@ -27,12 +27,12 @@ void exportGridToCSV(const std::vector<std::vector<Point>>& grid, std::string fp
     }
 
     file.close();
-    std::cout << "--CSV export for grid plotting complete: " << fname << std::endl;
+    std::cout << "--CSV export done for: " << fpath << std::endl;
 }
 
 void exportScalarFieldToCSV(const std::vector<std::vector<double>>& field, const std::string& fpath) 
 {
-    std::ofstream file(std::string("output/") + fname);
+    std::ofstream file(std::string("output/") + fpath);
     if (!file.is_open()) 
     {
         std::cerr << "Error opening file: " << fpath << std::endl;
@@ -50,6 +50,6 @@ void exportScalarFieldToCSV(const std::vector<std::vector<double>>& field, const
     }
 
     file.close();
-    std::cout << "--Scalar field CSV export complete: " << fpath << std::endl;
+    std::cout << "--CSV export done for: " << fpath << std::endl;
 }
 

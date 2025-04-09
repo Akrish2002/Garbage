@@ -98,7 +98,7 @@ void Grid::AddHaloCells_2D()
             n_g_2D[i+1][0].y = 2*n_2D[i][0].y - n_2D[i][1].y;
             n_g_2D[i+1][cols_g - 1].y = 2*n_2D[i][cols - 1].y - n_2D[i][cols - 2].y;
         }
-        std::cout<<"--Column value assignment is fine!"<<std::endl;
+        std::cout<<"--Column value assignment is done!"<<std::endl;
    
 //       //Assigning row values
         for(size_t j = 0; j < cols; j++)
@@ -112,7 +112,7 @@ void Grid::AddHaloCells_2D()
             n_g_2D[rows_g - 1][j + 1].x = 2*n_2D[rows - 1][j].x - 
                                                        n_2D[rows - 2][j].x; 
         }
-        std::cout<<"--Row value assignment is fine!"<<std::endl;
+        std::cout<<"--Row value assignment is done!"<<std::endl;
 
         //Assigning interior values
         for (size_t i = 0; i < rows; ++i) 
@@ -146,7 +146,7 @@ void Grid::AddHaloCells_2D()
 //       std::cout<<"--[1,0] Ghost Grid value x and y : "<<n_g_2D[1][0].x<<" "<<n_g_2D[1][0].y<<std::endl;
 //       std::cout<<"--[1,1] Ghost Grid value x and y : "<<n_g_2D[1][1].x<<" "<<n_g_2D[1][1].y<<std::endl;
 //       std::cout<<"--[1,2] Ghost Grid value x and y : "<<n_g_2D[1][2].x<<" "<<n_g_2D[1][2].y<<std::endl;
-        std::cout<<"--Ghost cells have been added"<<"\n\n"; 
+        std::cout<<"--Interior and Corner value assignment done!"<<"\n\n"; 
         
         exportGridToCSV(n_g_2D, "n_g_2D.csv");
         exportGridToCSV(n_2D, "n_2D.csv");
@@ -166,11 +166,11 @@ void Grid::ComputeProjCellFaceArea()
 
     //Cell face allocation for face perpendicular to ξ
     allocate_2D(nx, ny - 1, cf_xi_2D);
-    std::cout<<"--CF allocation perpendicular to ξ has been done!"<<std::endl;
+    std::cout<<"--CF allocation perpendicular to ξ is done!"<<std::endl;
     
     //Cell face allocation for face perpendicular to η
     allocate_2D(nx - 1, ny, cf_eta_2D);
-    std::cout<<"--CF allocation perpendicular to η has been done!"<<std::endl;
+    std::cout<<"--CF allocation perpendicular to η is done!"<<std::endl;
 
 //   std::cout<<"--Size of n_2D: "<<n_2D.size()<<" "<<n_2D[0].size();
 //   std::cout<<"\n--Size of cf_xi_2D: "<<cf_xi_2D.size()<<" "<<cf_xi_2D[0].size()<<std::endl;
@@ -201,7 +201,8 @@ void Grid::ComputeProjCellFaceArea()
   
     }  
     
-    std::cout<<"--Projected Cell face areas have been computed!"<<std::endl;
+    std::cout<<"--Projected Cell face areas have been computed!\n"<<std::endl;
     exportScalarFieldToCSV(cf_xi_2D, "cf_xi_2D.csv");
     exportScalarFieldToCSV(cf_eta_2D, "cf_eta_2D.csv");
+    std::cout<<std::endl;
 }
