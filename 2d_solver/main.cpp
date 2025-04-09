@@ -18,6 +18,7 @@ int main()
 	
     Grid grid(fpath);
     grid.AddHaloCells_2D();
+    grid.ComputeProjCellFaceArea();
 
 	return 0;
 }
