@@ -10,6 +10,7 @@
 #include "read.h"
 #include "allocate.h"
 #include "write.h"
+#include "debug.h"
 
 /* Constructor to read grid file
  *
@@ -23,27 +24,28 @@ Grid::Grid(std::string fpath, bool write)
 {
 
     //Reading grid coords
+    //Passed by refernce, so I get back the right nx and ny values
     read(fpath, coords_2D, nx, ny);
-    int coords_nx = coords_2D.size();
-    int coords_ny = coords_2D[0].size();
 
     //Allocating memory
-    allocate_2D(nx, ny, n_2D);
+    allocate_2D(ny, nx, n_2D);
     
     //Assigning coords value to allocated grid
-    for(int j = 0; j < ny; j++)    
+    for(int i = 0; i < ny; i++)    
     {
-       for(int i = 0; i < nx; i++)
+       for(int j = 0; j < nx; j++)
        {
-           n_2D[i][j].x = coords_2D[j * nx + i][0];
-           n_2D[i][j].y = coords_2D[j * nx + i][1];
+           n_2D[i][j].x = coords_2D[i * nx + j][0];
+           n_2D[i][j].y = coords_2D[i * nx + j][1];
         }
     }
 
     std::cout<<"--2D coords have been transformed and assigned to n_2D"<<"\n\n";
-//   std::cout<<"--[0,0] Grid Value x and y : "<<n_2D[0][0].x<<" "<<n_2D[0][0].y<<std::endl;
-//   std::cout<<"--[1,1] Grid Value x and y : "<<n_2D[0][1].x<<" "<<n_2D[0][1].y<<std::endl;
-//   std::cout<<"--[1,2] Grid Value x and y : "<<n_2D[0][2].x<<" "<<n_2D[0][2].y<<std::endl;
+    exportGridToCSV(n_2D, "n_2D.csv");
+    std::cout<<std::endl;
+    
+    D_GridConstructer(n_2D);
+
 }
 
 /* Parameters required:
@@ -57,9 +59,10 @@ void Grid::ComputeMetrics(int dim)
 {
     if(dim == 2)
     {
-         AddHaloCells_2D(); 
-         //ComputeCellVol();
-         ComputeProjCellFaceArea();
+        AddHaloCells_2D(); 
+        ComputeProjCellFaceArea();
+        AvgToCellCenter();
+        //ComputeCellVol();
     }
 
 }
@@ -92,25 +95,26 @@ void Grid::AddHaloCells_2D()
         //Assigning column values
         for(size_t i = 0; i < rows; i++)
         {
-            
+
             n_g_2D[i+1][0].x = 2*n_2D[i][0].x - n_2D[i][1].x;
             n_g_2D[i+1][cols_g - 1].x = 2*n_2D[i][cols - 1].x - n_2D[i][cols - 2].x;
+
             n_g_2D[i+1][0].y = 2*n_2D[i][0].y - n_2D[i][1].y;
             n_g_2D[i+1][cols_g - 1].y = 2*n_2D[i][cols - 1].y - n_2D[i][cols - 2].y;
+
         }
         std::cout<<"--Column value assignment is done!"<<std::endl;
    
-//       //Assigning row values
+       //Assigning row values
         for(size_t j = 0; j < cols; j++)
         {
             
             n_g_2D[0][j+1].y = 2*n_2D[0][j].y - n_2D[1][j].y;
-            n_g_2D[rows_g - 1][j + 1].y = 2*n_2D[rows - 1][j].y - 
-                                                       n_2D[rows - 2][j].y; 
+            n_g_2D[rows_g - 1][j + 1].y = 2*n_2D[rows - 1][j].y - n_2D[rows - 2][j].y; 
 
             n_g_2D[0][j+1].x = 2*n_2D[0][j].x - n_2D[1][j].x;
-            n_g_2D[rows_g - 1][j + 1].x = 2*n_2D[rows - 1][j].x - 
-                                                       n_2D[rows - 2][j].x; 
+            n_g_2D[rows_g - 1][j + 1].x = 2*n_2D[rows - 1][j].x - n_2D[rows - 2][j].x; 
+
         }
         std::cout<<"--Row value assignment is done!"<<std::endl;
 
@@ -129,10 +133,8 @@ void Grid::AddHaloCells_2D()
         n_g_2D[0][0].y = 2*n_g_2D[0][1].y - n_g_2D[0][2].y;
 
         //Top Right 
-        n_g_2D[0][cols_g - 1].x = 2*n_g_2D[0][cols_g - 2].x 
-                                           - n_g_2D[0][cols_g - 3].x;
-        n_g_2D[0][cols_g - 1].y = 2*n_g_2D[0][cols_g - 2].y 
-                                           - n_g_2D[0][cols_g - 3].y;
+        n_g_2D[0][cols_g - 1].x = 2*n_g_2D[0][cols_g - 2].x - n_g_2D[0][cols_g - 3].x;
+        n_g_2D[0][cols_g - 1].y = 2*n_g_2D[0][cols_g - 2].y - n_g_2D[0][cols_g - 3].y;
         
         //Bottom Left
         n_g_2D[rows_g - 1][0].x = 2*n_g_2D[rows_g - 1][1].x - n_g_2D[rows_g - 1][2].x;
@@ -142,14 +144,11 @@ void Grid::AddHaloCells_2D()
         n_g_2D[rows_g - 1][cols_g - 1].x = 2*n_g_2D[rows_g - 1][cols_g - 2].x - n_g_2D[rows_g - 1][cols_g - 3].x;
         n_g_2D[rows_g - 1][cols_g - 1].y = 2*n_g_2D[rows_g - 1][cols_g - 2].y - n_g_2D[rows_g - 1][cols_g - 3].y;
 
-
-//       std::cout<<"--[1,0] Ghost Grid value x and y : "<<n_g_2D[1][0].x<<" "<<n_g_2D[1][0].y<<std::endl;
-//       std::cout<<"--[1,1] Ghost Grid value x and y : "<<n_g_2D[1][1].x<<" "<<n_g_2D[1][1].y<<std::endl;
-//       std::cout<<"--[1,2] Ghost Grid value x and y : "<<n_g_2D[1][2].x<<" "<<n_g_2D[1][2].y<<std::endl;
         std::cout<<"--Interior and Corner value assignment done!"<<"\n\n"; 
-        
+
+        D_AddHaloCells(n_g_2D);
+
         exportGridToCSV(n_g_2D, "n_g_2D.csv");
-        exportGridToCSV(n_2D, "n_2D.csv");
         std::cout<<std::endl;
 }
 
@@ -161,19 +160,17 @@ void Grid::AddHaloCells_2D()
 
 void Grid::ComputeProjCellFaceArea()
 {
-    allocate_2D(nx + 2, ny + 2, cc_2D);
-    std::cout<<"--CC allocation has been done!"<<std::endl;
 
     //Cell face allocation for face perpendicular to ξ
-    allocate_2D(nx, ny - 1, cf_xi_2D);
+    allocate_2D(ny - 1, nx, cf_xi_2D);
     std::cout<<"--CF allocation perpendicular to ξ is done!"<<std::endl;
     
     //Cell face allocation for face perpendicular to η
-    allocate_2D(nx - 1, ny, cf_eta_2D);
+    allocate_2D(ny, nx - 1, cf_eta_2D);
     std::cout<<"--CF allocation perpendicular to η is done!"<<std::endl;
 
-//   std::cout<<"--Size of n_2D: "<<n_2D.size()<<" "<<n_2D[0].size();
-//   std::cout<<"\n--Size of cf_xi_2D: "<<cf_xi_2D.size()<<" "<<cf_xi_2D[0].size()<<std::endl;
+    std::cout<<"--Size of n_2D: "<<n_2D.size()<<" "<<n_2D[0].size();
+    std::cout<<"\n--Size of cf_xi_2D: "<<cf_xi_2D.size()<<" "<<cf_xi_2D[0].size()<<std::endl;
 
     double x_eta, y_eta;
     for(size_t i = 0; i < cf_xi_2D.size() - 1; i++)
@@ -202,7 +199,50 @@ void Grid::ComputeProjCellFaceArea()
     }  
     
     std::cout<<"--Projected Cell face areas have been computed!\n"<<std::endl;
-    exportScalarFieldToCSV(cf_xi_2D, "cf_xi_2D.csv");
-    exportScalarFieldToCSV(cf_eta_2D, "cf_eta_2D.csv");
+    //exportScalarFieldToCSV(cf_xi_2D, "cf_xi_2D.csv");
+    //exportScalarFieldToCSV(cf_eta_2D, "cf_eta_2D.csv");
+    std::cout<<std::endl;
+}
+
+void Grid::AvgToCellCenter()
+{
+    //Should give me struct point initialized with zeros
+    //Allocating -1 since centered values 
+    allocate_2D(ny - 1, nx - 1, cc_2D);
+    std::cout<<"--CC allocation has been done!"<<std::endl;
+
+    //To compute x and y center values
+    allocate_2D(ny - 1, nx - 1, nc_2D);
+    std::cout<<"--NC allocation has been done!"<<std::endl;
+
+//   std::cout<<"--Nx and Ny values: "<<nx<<" "<<ny<<std::endl; 
+//   std::cout<<"--n_2D sizes: "<<n_2D.size()<<" "<<n_2D[0].size()<<std::endl; 
+//   std::cout<<"--CC sizes: "<<cc_2D.size()<<" "<<cc_2D[0].size()<<std::endl; 
+//   std::cout<<"--CF xi sizes: "<<cf_xi_2D.size()<<" "<<cf_xi_2D[0].size()<<std::endl; 
+//   std::cout<<"--CF eta sizes: "<<cf_eta_2D.size()<<" "<<cf_eta_2D[0].size()<<std::endl; 
+
+    //S_xi avg
+    for(size_t i = 0; i < cf_xi_2D.size(); i++)
+    {
+        for(size_t j = 0; j < cf_xi_2D[0].size() - 1; j++)
+        {
+            cc_2D[i][j].x = (cf_xi_2D[i][j + 1] + cf_xi_2D[i][j]) * 0.5;
+            nc_2D[i][j].x = (n_2D[i][j + 1].x + n_2D[i][j].x) * 0.5;
+        }
+    }
+
+
+    //S_eta avg
+    for(size_t j = 0; j < cf_eta_2D[0].size(); j++)
+    {
+        for(size_t i = 0; i < cf_eta_2D.size() - 1; i++)
+        {
+            cc_2D[i][j].y = (cf_eta_2D[i + 1][j] + cf_xi_2D[i][j]) * 0.5;
+            nc_2D[i][j].y = (n_2D[i + 1][j].y + n_2D[i][j].y) * 0.5;
+        }
+    }
+    
+    exportGridToCSV(nc_2D, "CellCenteredNodes.csv");
+    exportGridToCSV(cc_2D, "AvgCellCentered.csv");
     std::cout<<std::endl;
 }

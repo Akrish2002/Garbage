@@ -17,8 +17,7 @@ int main()
 	std::string fpath = "data/g641x065uf";
 	
     Grid grid(fpath);
-    grid.AddHaloCells_2D();
-    grid.ComputeProjCellFaceArea();
+    grid.ComputeMetrics(2);
 
 	return 0;
 }
