@@ -2,7 +2,7 @@
 
 ##  Grid Naming Convention
 
-To maintain clarity and consistency across the 2D finite-volume solver, the following variable naming scheme is used for spatial grids and geometry-related fields:
+To maintain clarity and consistency across the 2D finite-volume solver, the following variable naming scheme is used:
 
 ###  Coordinate Containers   
 | Name        | Description                                       |
