@@ -18,6 +18,7 @@ struct Point
     
 };
  
+
 //Have to code it to output files to plot the halo cells, normal grid and  binary or .dat 
 class Grid
 {
@@ -36,13 +37,15 @@ class Grid
         Grid(std::string file, bool write = false);
 
         //Functions
-        void AddHaloCells_2D();
-        void ComputeMetrics(int dim=2);
-        void ComputeProjCellFaceArea(); 
-        void AvgToCellCenter(); 
+        void addHaloCells_2D();
+        void computeMetrics(int dim=2);
+        void computeProjCellFaceArea(); 
+        void avgtoCellCenter();
+
         //Destructor
         //Initially implemented destructor, but read online that it is not necessary as the memor          y is deallocated once it goes out of scope. 
         // ~Grid();
 };
+
 
 #endif
