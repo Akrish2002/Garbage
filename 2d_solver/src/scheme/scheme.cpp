@@ -9,7 +9,7 @@
 #include "allocate.h"
 #include "debug.h"
 #include "stateVar.h"
-#include "fluxlimiter.cpp"
+#include "fluxlimiter.h"
 
 void performMUSCL(
     
@@ -22,15 +22,15 @@ void performMUSCL(
 )
 {
     //Memory allocation
-    allocate(ny + 1, nx + 1, Q); //Including Halo cells
+    allocate_2D(ny + 1, nx + 1, Q); //Including Halo cells
 
-    allocate(ny + 1, nx + 1, Q_xi_L);
-    allocate(ny + 1, nx + 1, Q_xi_R);
+    allocate_2D(ny + 1, nx + 1, Q_xi_L);
+    allocate_2D(ny + 1, nx + 1, Q_xi_R);
 
-    allocate(ny + 1, nx + 1, Q_eta_L);
-    allocate(ny + 1, nx + 1, Q_eta_R);
+    allocate_2D(ny + 1, nx + 1, Q_eta_L);
+    allocate_2D(ny + 1, nx + 1, Q_eta_R);
 
-    std::vector<std::vector<stateVar>> r_R, r_L;
+    //std::vector<std::vector<stateVar>> r_R, r_L;
     
 
     //xi direction
@@ -44,8 +44,8 @@ void performMUSCL(
 
             // r_L = (U_i+1 - U_i) / (U_i - U_i-1)
             // r_R = (U_i+1 - U_i) / (U_i+2 - U_i+1)
-            r_L = (Q[i][j] - Q[i][j - 1]) / (Q[i][j - 1] - Q[i][j - 2]); 
-            r_R = (Q[i][j] - Q[i][j - 1]) / (Q[i][j + 1] - Q[i][  j  ]); 
+            stateVar r_L = (Q[i][j] - Q[i][j - 1]) / (Q[i][j - 1] - Q[i][j - 2]); 
+            stateVar r_R = (Q[i][j] - Q[i][j - 1]) / (Q[i][j + 1] - Q[i][  j  ]); 
 
 
             // U(^L)_(i+1/2) = U_i   + ε/4 * (U_i   - U_i-1) * [(1 - k) * Φ(r_L) + (1 + k) * r_L * Φ(1/r_L)]
@@ -84,8 +84,8 @@ void performMUSCL(
 
             // r_L = (U_i+1 - U_i) / (U_i - U_i-1)
             // r_R = (U_i+1 - U_i) / (U_i+2 - U_i+1)
-            r_L = (Q[j][i] - Q[j - 1][i]) / (Q[j - 1][i] - Q[j - 2][i]); 
-            r_R = (Q[j][i] - Q[j - 1][i]) / (Q[j + 1][i] - Q[  j  ][i]); 
+            stateVar r_L = (Q[j][i] - Q[j - 1][i]) / (Q[j - 1][i] - Q[j - 2][i]); 
+            stateVar r_R = (Q[j][i] - Q[j - 1][i]) / (Q[j + 1][i] - Q[  j  ][i]); 
 
 
             // U(^L)_(i+1/2) = U_i   + ε/4 * (U_i   - U_i-1) * [(1 - k) * Φ(r_L) + (1 + k) * r_L * Φ(1/r_L)]

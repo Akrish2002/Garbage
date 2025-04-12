@@ -5,10 +5,15 @@
 
 #include <string>
 
+/* Parmeters required
+ * ------------------
+ *
+ */
+
 inline double limiter_minmod(double r)
 {
 
-    return std::max(0, std::min(1, r));
+    return std::max(0.0, std::min(1.0, r));
 
 }
 

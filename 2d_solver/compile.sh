@@ -41,3 +41,4 @@ g++ -I $scheme -I $malloc -I $io -I $grid -I $debugger $compile_line \
     $scheme_stateVar_cpp \
     $debugger_debug_cpp
 
+echo "Compiled successfully!"

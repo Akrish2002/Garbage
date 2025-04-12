@@ -2,6 +2,7 @@
 #define CFD_SCHEMES_SCHEMES_H
 
 #include "grid.h"
+#include "stateVar.h"
 
 #include <vector>
 
@@ -29,13 +30,6 @@ void performMUSCL(
     std::vector<std::vector<stateVar>>& Q_eta_L, std::vector<std::vector<stateVar>>& Q_eta_R
 
 );
-
-
-
-
-
-
-
 
 
 #endif

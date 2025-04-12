@@ -12,7 +12,7 @@
 //1. stateVar + stateVar
 stateVar operator+(const stateVar& a, const stateVar& b)
 {
-    return 
+    return stateVar 
     {
         a.rho + b.rho,
         a.rho_u + b.rho_u,
@@ -22,17 +22,58 @@ stateVar operator+(const stateVar& a, const stateVar& b)
 } 
 
 //------------------------------------------------------------------------------
+//Subtraction overloading
+//1. stateVar - stateVar
+stateVar operator-(const stateVar& a, const stateVar& b)
+{
+    return stateVar 
+    {
+        a.rho - b.rho,
+        a.rho_u - b.rho_u,
+        a.rho_v - b.rho_v,
+        a.rho_et - b.rho_et
+   };
+} 
+
+//------------------------------------------------------------------------------
+//Equalto  overloading
+//1. stateVar = stateVar
+stateVar stateVar::operator=(const stateVar& b)
+{
+
+    rho    = b.rho;
+    rho_u  = b.rho_u;
+    rho_v  = b.rho_v;
+    rho_et = b.rho_et;
+
+    return *this;
+} 
+
+//------------------------------------------------------------------------------
 //Multiplication overload
 //1. double * stateVar
 stateVar operator*(double a, const stateVar& b)
 {
 
-    return
+    return stateVar
     {
         a * b.rho,
         a * b.rho_u,
         a * b.rho_v,
         a * b.rho_et
+    };
+} 
+
+//2. stateVar * stateVar
+stateVar operator*(const stateVar& a, const stateVar& b)
+{
+
+    return stateVar
+    {
+        a.rho * b.rho,
+        a.rho_u * b.rho_u,
+        a.rho_v * b.rho_v,
+        a.rho_et * b.rho_et
     };
 } 
 
@@ -48,7 +89,7 @@ stateVar operator/(const stateVar& a, const stateVar& b)
     if (b.rho_v == 0.0) std::cout<<"rho division by zero";
     if (b.rho_et == 0.0) std::cout<<"rho division by zero";
      
-    return 
+    return stateVar 
     {
         a.rho /  b.rho,
         a.rho_u / b.rho_u,
@@ -66,7 +107,7 @@ stateVar operator/(double a, const stateVar& b)
     if (b.rho_v == 0.0) std::cout<<"rho division by zero";
     if (b.rho_et == 0.0) std::cout<<"rho division by zero";
      
-    return 
+    return stateVar 
     {
         a /  b.rho,
         a / b.rho_u,
@@ -76,16 +117,16 @@ stateVar operator/(double a, const stateVar& b)
 }
 
 //3. stateVar/double
-stateVar operator/(const stateVar& b, double a)
+stateVar operator/(const stateVar& a, double b)
 {
 
-    if (a == 0.0) std::cout<<"rho division by zero";
+    if (b == 0.0) std::cout<<"rho division by zero";
 
-    return 
+    return stateVar 
     {
-        b.rho  / a ,
-        b.rho_u / a ,
-        b.rho_v / a ,
-        b.rho_et / a
+        a.rho  / b ,
+        a.rho_u / b ,
+        a.rho_v / b ,
+        a.rho_et / b
    };
 } 

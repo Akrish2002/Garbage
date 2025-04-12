@@ -4,7 +4,18 @@
 
 stateVar fluxlimiter(const stateVar& r, const std::string& type)
 {
-    if(type == "minmod") limiter = limiter_minmod;
+    if(type == "minmod")
+    {     
+        return 
+        {
+            limiter_minmod(r.rho),
+            limiter_minmod(r.rho_u),
+            limiter_minmod(r.rho_v),
+            limiter_minmod(r.rho_et)
+            
+        };
+    }
+
     // Write for other flux limiters
     //
     //
@@ -16,13 +27,5 @@ stateVar fluxlimiter(const stateVar& r, const std::string& type)
         exit(1);
     }
     
-    return 
-    {
-        limiter(r.rho),
-        limiter(r.rho_u),
-        limiter(r.rho_v),
-        limiter(r.rho_et),
-        
-    };
 
 }
