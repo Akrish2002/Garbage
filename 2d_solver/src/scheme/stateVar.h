@@ -1,5 +1,5 @@
-#ifndef CFD_GRID_STATEVAR_H
-#define CFD_GRID_STATEVAR_H
+#ifndef CFD_SCHEMES_STATEVAR_H
+#define CFD_SCHEMES_STATEVAR_H
 
 struct stateVar
 {

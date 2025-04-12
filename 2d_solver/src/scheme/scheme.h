@@ -29,7 +29,6 @@ void performMUSCL(
     std::vector<std::vector<stateVar>>& Q_eta_L, std::vector<std::vector<stateVar>>& Q_eta_R
 
 );
-void fluxlimiter(std::vector<std::vector<stateVar>>& r);
 
 
 

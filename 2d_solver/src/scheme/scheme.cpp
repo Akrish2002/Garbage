@@ -9,6 +9,7 @@
 #include "allocate.h"
 #include "debug.h"
 #include "stateVar.h"
+#include "fluxlimiter.cpp"
 
 void performMUSCL(
     
@@ -50,12 +51,12 @@ void performMUSCL(
             // U(^L)_(i+1/2) = U_i   + ε/4 * (U_i   - U_i-1) * [(1 - k) * Φ(r_L) + (1 + k) * r_L * Φ(1/r_L)]
             // U(^R)_(i+1/2) = U_i+1 + ε/4 * (U_i+2 - U_i+1) * [(1 - k) * Φ(r_R) + (1 + k) * r_R * Φ(1/r_R)]  
             Q_xi_L[i][j] = Q[i][j - 1]  + 0.25 * epsilon * ( 
-                                           (Q[i][j - 1] - Q[i][j - 2]) * (1.0 - kappa) * fluxlimiter(r_L) 
-                                        +  (Q[i][  j  ] - Q[i][j - 1]) * (1.0 + kappa) * fluxlimiter(1.0/r_L)); 
+                                           (Q[i][j - 1] - Q[i][j - 2]) * (1.0 - kappa) * fluxlimiter(r_L, "minmod") 
+                                        +  (Q[i][  j  ] - Q[i][j - 1]) * (1.0 + kappa) * fluxlimiter(1.0/r_L, "minmod")); 
                 
             Q_xi_R[i][j] = Q[i][  j  ]  + 0.25 * epsilon * (
-                                           (Q[i][j + 1] - Q[i][  j  ]) * (1.0 - kappa) * fluxlimiter(r_R) 
-                                        +  (Q[i][  j  ] - Q[i][j - 1]) * (1.0 + kappa) * fluxlimiter(1.0/r_L)); 
+                                           (Q[i][j + 1] - Q[i][  j  ]) * (1.0 - kappa) * fluxlimiter(r_R, "minmod") 
+                                        +  (Q[i][  j  ] - Q[i][j - 1]) * (1.0 + kappa) * fluxlimiter(1.0/r_L, "minmod")); 
             
         }
     }
@@ -90,12 +91,12 @@ void performMUSCL(
             // U(^L)_(i+1/2) = U_i   + ε/4 * (U_i   - U_i-1) * [(1 - k) * Φ(r_L) + (1 + k) * r_L * Φ(1/r_L)]
             // U(^R)_(i+1/2) = U_i+1 + ε/4 * (U_i+2 - U_i+1) * [(1 - k) * Φ(r_R) + (1 + k) * r_R * Φ(1/r_R)]  
             Q_eta_L[j][i] = Q[j - 1][i]  + 0.25 * epsilon * ( 
-                                           (Q[j - 1][i] - Q[j - 2][i]) * (1.0 - kappa) * fluxlimiter(r_L) 
-                                        +  (Q[  j  ][i] - Q[j - 1][i]) * (1.0 + kappa) * fluxlimiter(1.0/r_L)); 
+                                           (Q[j - 1][i] - Q[j - 2][i]) * (1.0 - kappa) * fluxlimiter(r_L, "minmod") 
+                                        +  (Q[  j  ][i] - Q[j - 1][i]) * (1.0 + kappa) * fluxlimiter(1.0/r_L, "minmod")); 
                 
             Q_eta_R[j][i] = Q[  j  ][i]  + 0.25 * epsilon * (
-                                           (Q[j + 1][i] - Q[  j  ][i]) * (1.0 - kappa) * fluxlimiter(r_R) 
-                                        +  (Q[  j  ][i] - Q[j - 1][i]) * (1.0 + kappa) * fluxlimiter(1.0/r_L)); 
+                                           (Q[j + 1][i] - Q[  j  ][i]) * (1.0 - kappa) * fluxlimiter(r_R, "minmod") 
+                                        +  (Q[  j  ][i] - Q[j - 1][i]) * (1.0 + kappa) * fluxlimiter(1.0/r_L, "minmod")); 
             
         }
     }
@@ -114,13 +115,3 @@ void performMUSCL(
 
 }
 
-fluxlimiter(std::vector<std::vector<stateVar>>& r)
-{
-
-    
-
-
-
-
-
-}

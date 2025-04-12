@@ -7,6 +7,9 @@
 
 //Performing operation overloading
 
+//------------------------------------------------------------------------------
+//Addition overloading
+//1. stateVar + stateVar
 stateVar operator+(const stateVar& a, const stateVar& b)
 {
     return 
@@ -18,7 +21,25 @@ stateVar operator+(const stateVar& a, const stateVar& b)
    };
 } 
 
+//------------------------------------------------------------------------------
+//Multiplication overload
+//1. double * stateVar
+stateVar operator*(double a, const stateVar& b)
+{
+
+    return
+    {
+        a * b.rho,
+        a * b.rho_u,
+        a * b.rho_v,
+        a * b.rho_et
+    };
+} 
+
+//------------------------------------------------------------------------------
+//Division overload
 //Use assert to check for dividing by zeros
+//1. stateVar / stateVar
 stateVar operator/(const stateVar& a, const stateVar& b)
 {
 
@@ -36,6 +57,7 @@ stateVar operator/(const stateVar& a, const stateVar& b)
    };
 } 
 
+//2. double / stateVar
 stateVar operator/(double a, const stateVar& b)
 {
 
@@ -50,5 +72,20 @@ stateVar operator/(double a, const stateVar& b)
         a / b.rho_u,
         a / b.rho_v,
         a / b.rho_et
+   };
+}
+
+//3. stateVar/double
+stateVar operator/(const stateVar& b, double a)
+{
+
+    if (a == 0.0) std::cout<<"rho division by zero";
+
+    return 
+    {
+        b.rho  / a ,
+        b.rho_u / a ,
+        b.rho_v / a ,
+        b.rho_et / a
    };
 } 
