@@ -19,6 +19,7 @@ int main()
     Grid grid(fpath);
     grid.addHaloCells_2D();
 
+    //2 for 2D
     grid.computeMetrics(2);
 	
     return 0;

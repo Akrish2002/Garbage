@@ -1,4 +1,4 @@
-#include "stateVar.h"
+#include "primitiveVar.h"
 
 #include <vector>
 #include <string>
@@ -9,24 +9,26 @@
 
 //------------------------------------------------------------------------------
 //Addition overloading
-//1. stateVar + stateVar
-stateVar operator+(const stateVar& a, const stateVar& b)
+//1. primitiveVar + primitiveVar
+primitiveVar operator+(const primitiveVar& a, const primitiveVar& b)
 {
-    return stateVar 
+    return primitiveVar 
     {
         a.rho + b.rho,
-        a.rho_u + b.rho_u,
-        a.rho_v + b.rho_v,
-        a.rho_et + b.rho_et
+        a.u + b.u,
+        a.v + b.v,
+        a.et + b.et
+        a.h + b.h,
+        a.P + b.P,
    };
 } 
 
 //------------------------------------------------------------------------------
 //Subtraction overloading
-//1. stateVar - stateVar
-stateVar operator-(const stateVar& a, const stateVar& b)
+//1. primitiveVar - primitiveVar
+primitiveVar operator-(const primitiveVar& a, const primitiveVar& b)
 {
-    return stateVar 
+    return primitiveVar 
     {
         a.rho - b.rho,
         a.rho_u - b.rho_u,
@@ -37,8 +39,8 @@ stateVar operator-(const stateVar& a, const stateVar& b)
 
 //------------------------------------------------------------------------------
 //Equalto  overloading
-//1. stateVar = stateVar
-stateVar stateVar::operator=(const stateVar& b)
+//1. primitiveVar = primitiveVar
+primitiveVar primitiveVar::operator=(const primitiveVar& b)
 {
 
     rho    = b.rho;
@@ -51,11 +53,11 @@ stateVar stateVar::operator=(const stateVar& b)
 
 //------------------------------------------------------------------------------
 //Multiplication overload
-//1. double * stateVar
-stateVar operator*(double a, const stateVar& b)
+//1. double * primitiveVar
+primitiveVar operator*(double a, const primitiveVar& b)
 {
 
-    return stateVar
+    return primitiveVar
     {
         a * b.rho,
         a * b.rho_u,
@@ -64,11 +66,11 @@ stateVar operator*(double a, const stateVar& b)
     };
 } 
 
-//2. stateVar * stateVar
-stateVar operator*(const stateVar& a, const stateVar& b)
+//2. primitiveVar * primitiveVar
+primitiveVar operator*(const primitiveVar& a, const primitiveVar& b)
 {
 
-    return stateVar
+    return primitiveVar
     {
         a.rho * b.rho,
         a.rho_u * b.rho_u,
@@ -80,8 +82,8 @@ stateVar operator*(const stateVar& a, const stateVar& b)
 //------------------------------------------------------------------------------
 //Division overload
 //Use assert to check for dividing by zeros
-//1. stateVar / stateVar
-stateVar operator/(const stateVar& a, const stateVar& b)
+//1. primitiveVar / primitiveVar
+primitiveVar operator/(const primitiveVar& a, const primitiveVar& b)
 {
 
     if (b.rho == 0.0) std::cout<<"rho division by zero";
@@ -89,7 +91,7 @@ stateVar operator/(const stateVar& a, const stateVar& b)
     if (b.rho_v == 0.0) std::cout<<"rho division by zero";
     if (b.rho_et == 0.0) std::cout<<"rho division by zero";
      
-    return stateVar 
+    return primitiveVar 
     {
         a.rho /  b.rho,
         a.rho_u / b.rho_u,
@@ -98,8 +100,8 @@ stateVar operator/(const stateVar& a, const stateVar& b)
    };
 } 
 
-//2. double / stateVar
-stateVar operator/(double a, const stateVar& b)
+//2. double / primitiveVar
+primitiveVar operator/(double a, const primitiveVar& b)
 {
 
     if (b.rho == 0.0) std::cout<<"rho division by zero";
@@ -107,7 +109,7 @@ stateVar operator/(double a, const stateVar& b)
     if (b.rho_v == 0.0) std::cout<<"rho division by zero";
     if (b.rho_et == 0.0) std::cout<<"rho division by zero";
      
-    return stateVar 
+    return primitiveVar 
     {
         a /  b.rho,
         a / b.rho_u,
@@ -116,13 +118,13 @@ stateVar operator/(double a, const stateVar& b)
    };
 }
 
-//3. stateVar/double
-stateVar operator/(const stateVar& a, double b)
+//3. primitiveVar/double
+primitiveVar operator/(const primitiveVar& a, double b)
 {
 
     if (b == 0.0) std::cout<<"rho division by zero";
 
-    return stateVar 
+    return primitiveVar 
     {
         a.rho  / b ,
         a.rho_u / b ,

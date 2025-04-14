@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-stateVar fluxlimiter(const stateVar& r, const std::string& type)
+consVar fluxlimiter(const consVar& r, const std::string& type)
 {
     if(type == "minmod")
     {     

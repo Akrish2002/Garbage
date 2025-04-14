@@ -44,9 +44,10 @@ void exportScalarFieldToCSV(const std::vector<std::vector<double>>& field, const
         for (size_t j = 0; j < row.size(); ++j) 
         {
             file << row[j];
-            if (j < row.size() - 1) file << ",";
+            //if (j < row.size() - 1) file << ",";
+            file << "\n";
         }
-        file << "\n";
+        //file << "\n";
     }
 
     file.close();

@@ -17,6 +17,8 @@ void read(
     std::string item;
     char seperator = ',';
     std::vector<double> grid_size; //Dynamic to append value
+
+    double L = 15.0e-3; //0.015 m
     
     std::string fname = fpath + ".dat"; 
     std::ifstream grid_file(fname);
@@ -40,11 +42,12 @@ void read(
     ny = (int) grid_size[1];   
     
     //Running through all coordinates
+    //Dimensionalizing them by *L
     while(std::getline(grid_file, row))
     {
         std::vector<double> coords_1D;
         std::stringstream ss(row);
-        while(std::getline(ss, item, seperator)) coords_1D.push_back(stof(item));
+        while(std::getline(ss, item, seperator)) coords_1D.push_back(stof(item)*L);
 
         //Add it to the 2D vector  
         coords_2D.push_back(coords_1D);

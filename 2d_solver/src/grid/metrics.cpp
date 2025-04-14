@@ -18,7 +18,7 @@ void Grid::computeMetrics(int dim)
     {
         computeProjCellFaceArea();
         avgtoCellCenter();
-        //ComputeCellVol();
+        computeCellVol();
     }
 
 }
@@ -29,7 +29,6 @@ void Grid::computeMetrics(int dim)
  *
  *Computes the projected cell face area
  */
-
 void Grid::computeProjCellFaceArea()
 {
 
@@ -70,7 +69,7 @@ void Grid::computeProjCellFaceArea()
   
     }  
     
-    std::cout<<"--Projected Cell face areas have been computed!\n"<<std::endl;
+    std::cout<<"--Projected Cell face areas have been computed!"<<std::endl;
     //exportScalarFieldToCSV(cf_xi_2D, "cf_xi_2D.csv");
     //exportScalarFieldToCSV(cf_eta_2D, "cf_eta_2D.csv");
     std::cout<<std::endl;
@@ -81,16 +80,20 @@ void Grid::avgtoCellCenter()
 {
     //Should give me struct point initialized with zeros
     //Allocating -1 since centered values 
-    allocate_2D(ny - 1, nx - 1, cc_2D);
+    allocate_2D(ny - 1, nx - 1, cc_xi_eta_2D);
     std::cout<<"--CC allocation has been done!"<<std::endl;
 
     //To compute x and y center values
     allocate_2D(ny - 1, nx - 1, nc_2D);
     std::cout<<"--NC allocation has been done!"<<std::endl;
 
+    //To compute x_g and y_g center values
+    allocate_2D(ny + 1, nx + 1, nc_g_2D);
+    std::cout<<"--NC_G allocation has been done!"<<std::endl;
+
 //   std::cout<<"--Nx and Ny values: "<<nx<<" "<<ny<<std::endl; 
 //   std::cout<<"--n_2D sizes: "<<n_2D.size()<<" "<<n_2D[0].size()<<std::endl; 
-//   std::cout<<"--CC sizes: "<<cc_2D.size()<<" "<<cc_2D[0].size()<<std::endl; 
+//   std::cout<<"--CC sizes: "<<cc_xi_eta_2D.size()<<" "<<cc_xi_eta_2D[0].size()<<std::endl; 
 //   std::cout<<"--CF xi sizes: "<<cf_xi_2D.size()<<" "<<cf_xi_2D[0].size()<<std::endl; 
 //   std::cout<<"--CF eta sizes: "<<cf_eta_2D.size()<<" "<<cf_eta_2D[0].size()<<std::endl; 
 
@@ -99,7 +102,7 @@ void Grid::avgtoCellCenter()
     {
         for(size_t j = 0; j < cf_xi_2D[0].size() - 1; j++)
         {
-            cc_2D[i][j].x = (cf_xi_2D[i][j + 1] + cf_xi_2D[i][j]) * 0.5;
+            cc_xi_eta_2D[i][j].x = (cf_xi_2D[i][j + 1] + cf_xi_2D[i][j]) * 0.5;
             nc_2D[i][j].x = (n_2D[i][j + 1].x + n_2D[i][j].x) * 0.5;
         }
     }
@@ -110,12 +113,67 @@ void Grid::avgtoCellCenter()
     {
         for(size_t i = 0; i < cf_eta_2D.size() - 1; i++)
         {
-            cc_2D[i][j].y = (cf_eta_2D[i + 1][j] + cf_xi_2D[i][j]) * 0.5;
+            cc_xi_eta_2D[i][j].y = (cf_eta_2D[i + 1][j] + cf_xi_2D[i][j]) * 0.5;
             nc_2D[i][j].y = (n_2D[i + 1][j].y + n_2D[i][j].y) * 0.5;
         }
     }
+   
+
+    //Centered x ghost values
+    for(size_t i = 0; i < nc_g_2D.size(); i++)
+    {
+        for(size_t j = 0; j < nc_g_2D[0].size(); j++)
+        {
+            nc_g_2D[i][j].x = (n_g_2D[i][j + 1].x + n_g_2D[i][j].x) * 0.5;
+        }
+    }
     
+
+    //Centered y ghost values
+    for(size_t j = 0; j < nc_g_2D[0].size(); j++)
+    {
+        for(size_t i = 0; i < nc_g_2D.size(); i++)
+        {
+            nc_g_2D[i][j].y = (n_g_2D[i + 1][j].y + n_g_2D[i][j].y) * 0.5;
+        }
+    }
+
     exportGridToCSV(nc_2D, "CellCenteredNodes.csv");
-    exportGridToCSV(cc_2D, "AvgCellCentered.csv");
+    exportGridToCSV(nc_g_2D, "CellCenteredGhostNodes.csv");
+    exportGridToCSV(cc_xi_eta_2D, "AvgCellCentered.csv");
+
     std::cout<<std::endl;
 }
+
+
+/*Parameters required
+ * ------------------
+ *  None
+ *
+ *  Computes cell vol
+ */
+void Grid::computeCellVol()
+{
+    //Allocating memory for vol storage at cell centers
+    allocate_2D(ny + 1, nx + 1, cc_vol_2D);
+
+    std::cout<<"--Allocation done for volume storage!"<<std::endl;
+       
+    for(size_t i = 0; i < ny + 1; i++)
+    {
+        for(size_t j = 0; j < nx + 1; j++)
+        {
+            double a = (n_g_2D[i + 1][j + 1].x - n_g_2D[i][  j  ].x);
+            double b = (n_g_2D[i + 1][j + 1].y - n_g_2D[i][  j  ].y);
+            double c = (n_g_2D[i + 1][  j  ].x - n_g_2D[i][j + 1].x);
+            double d = (n_g_2D[i + 1][  j  ].y - n_g_2D[i][j + 1].y);
+
+            cc_vol_2D[i][j] = 0.5 * std::abs(a * d - c * b);
+        }
+    }
+
+    std::cout<<"--Computed cell volume!"<<std::endl;
+    exportScalarFieldToCSV(cc_vol_2D, "CellVol_2D.csv");
+    
+    std::cout<<std::endl;
+} 

@@ -48,25 +48,6 @@ Grid::Grid(std::string fpath, bool write)
 
 }
 
-/* Parameters required:
- * -------------------
- *  None
- *
- *  Adds halo cells and computes all metrics
- */
-
-//oid Grid::ComputeMetrics(int dim)
-//
-//   if(dim == 2)
-//   {
-//       AddHaloCells_2D(); 
-//       ComputeProjCellFaceArea();
-//       AvgToCellCenter();
-//       //ComputeCellVol();
-//   }
-//
-//
-
 
 /*Parameters required:
  * ------------------
@@ -144,7 +125,7 @@ void Grid::addHaloCells_2D()
         n_g_2D[rows_g - 1][cols_g - 1].x = 2*n_g_2D[rows_g - 1][cols_g - 2].x - n_g_2D[rows_g - 1][cols_g - 3].x;
         n_g_2D[rows_g - 1][cols_g - 1].y = 2*n_g_2D[rows_g - 1][cols_g - 2].y - n_g_2D[rows_g - 1][cols_g - 3].y;
 
-        std::cout<<"--Interior and Corner value assignment done!"<<"\n\n"; 
+        std::cout<<"--Interior and Corner value assignment done!"<<std::endl; 
 
         D_AddHaloCells(n_g_2D);
 

@@ -28,9 +28,9 @@ class Grid
         bool write;
         int nx, ny;
 
-        std::vector<std::vector<double>> coords_2D, cf_xi_2D, cf_eta_2D;
+        std::vector<std::vector<double>> coords_2D, cf_xi_2D, cf_eta_2D, cc_vol_2D;
         
-        std::vector<std::vector<Point>> n_2D, n_g_2D, nc_2D, cc_2D;// cc_2D, cf_xi_2D, cf_eta_2D; 
+        std::vector<std::vector<Point>> n_2D, n_g_2D, nc_2D, nc_g_2D, cc_xi_eta_2D;// cc_2D, cf_xi_2D, cf_eta_2D; 
 
     public:
         //Constructor
@@ -38,9 +38,11 @@ class Grid
 
         //Functions
         void addHaloCells_2D();
+
         void computeMetrics(int dim=2);
         void computeProjCellFaceArea(); 
         void avgtoCellCenter();
+        void computeCellVol();
 
         //Destructor
         //Initially implemented destructor, but read online that it is not necessary as the memor          y is deallocated once it goes out of scope. 
