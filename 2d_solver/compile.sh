@@ -5,7 +5,7 @@ io="src/io"
 grid="src/grid"
 malloc="src/malloc"
 scheme="src/scheme"
-variables="src/scheme/variables"
+variables="src/variables"
 interpolation="src/scheme/interpolation"
 debugger="src/debugger"
 
@@ -16,7 +16,9 @@ io_write_cpp="$io/write.cpp"
 malloc_allocate_cpp="$malloc/allocate.cpp"
 grid_grid_cpp="$grid/grid.cpp"
 grid_metrics_cpp="$grid/metrics.cpp"
-scheme_variables_consVar_cpp="$scheme/variables/consVar.cpp"
+variables_consVar_cpp="$variables/consVar.cpp"
+variables_primitiveVar_cpp="$variables/primitiveVar.cpp"
+variables_conversion_cpp="$variables/conversion.cpp"
 scheme_interpolation_MUSCL_cpp="$scheme/interpolation/MUSCL.cpp"
 scheme_interpolation_fluxlimiter_cpp="$scheme/interpolation/fluxlimiter.cpp"
 debugger_debug_cpp="$debugger/debug.cpp"
@@ -38,9 +40,11 @@ g++ -I $interpolation -I $variables -I $scheme -I $malloc -I $io -I $grid -I $de
     $malloc_allocate_cpp \
     $grid_grid_cpp \
     $grid_metrics_cpp \
+    $variables_consVar_cpp \
+    $variables_primitiveVar_cpp \
+    $variables_conversion_cpp \
     $scheme_interpolation_MUSCL_cpp \
     $scheme_interpolation_fluxlimiter_cpp \
-    $scheme_variables_consVar_cpp \
     $debugger_debug_cpp
 
 echo "Compiled successfully!"

@@ -15,11 +15,11 @@ primitiveVar operator+(const primitiveVar& a, const primitiveVar& b)
     return primitiveVar 
     {
         a.rho + b.rho,
-        a.u + b.u,
-        a.v + b.v,
-        a.et + b.et
-        a.h + b.h,
-        a.P + b.P,
+        a.u   + b.u,
+        a.v   + b.v,
+        a.et  + b.et,
+        a.ht  + b.ht,
+        a.P   + b.P
    };
 } 
 
@@ -31,9 +31,11 @@ primitiveVar operator-(const primitiveVar& a, const primitiveVar& b)
     return primitiveVar 
     {
         a.rho - b.rho,
-        a.rho_u - b.rho_u,
-        a.rho_v - b.rho_v,
-        a.rho_et - b.rho_et
+        a.u   - b.u,
+        a.v   - b.v,
+        a.et  - b.et,
+        a.ht  - b.ht,
+        a.P   - b.P
    };
 } 
 
@@ -43,10 +45,12 @@ primitiveVar operator-(const primitiveVar& a, const primitiveVar& b)
 primitiveVar primitiveVar::operator=(const primitiveVar& b)
 {
 
-    rho    = b.rho;
-    rho_u  = b.rho_u;
-    rho_v  = b.rho_v;
-    rho_et = b.rho_et;
+        rho = b.rho,
+        u   = b.u,
+        v   = b.v,
+        et  = b.et,
+        ht  = b.ht,
+        P   = b.P;
 
     return *this;
 } 
@@ -60,9 +64,12 @@ primitiveVar operator*(double a, const primitiveVar& b)
     return primitiveVar
     {
         a * b.rho,
-        a * b.rho_u,
-        a * b.rho_v,
-        a * b.rho_et
+        a * b.u,
+        a * b.v,
+        a * b.et,
+        a * b.ht,
+        a * b.P
+
     };
 } 
 
@@ -73,9 +80,11 @@ primitiveVar operator*(const primitiveVar& a, const primitiveVar& b)
     return primitiveVar
     {
         a.rho * b.rho,
-        a.rho_u * b.rho_u,
-        a.rho_v * b.rho_v,
-        a.rho_et * b.rho_et
+        a.u   * b.u,
+        a.v   * b.v,
+        a.et  * b.et,
+        a.ht  * b.ht,
+        a.P   * b.P
     };
 } 
 
@@ -87,16 +96,18 @@ primitiveVar operator/(const primitiveVar& a, const primitiveVar& b)
 {
 
     if (b.rho == 0.0) std::cout<<"rho division by zero";
-    if (b.rho_u == 0.0) std::cout<<"rho division by zero";
-    if (b.rho_v == 0.0) std::cout<<"rho division by zero";
-    if (b.rho_et == 0.0) std::cout<<"rho division by zero";
+    if (b.u == 0.0) std::cout<<"rho division by zero";
+    if (b.v == 0.0) std::cout<<"rho division by zero";
+    if (b.et == 0.0) std::cout<<"rho division by zero";
      
     return primitiveVar 
     {
         a.rho /  b.rho,
-        a.rho_u / b.rho_u,
-        a.rho_v / b.rho_v,
-        a.rho_et / b.rho_et
+        a.u   /  b.u,
+        a.v   /  b.v,
+        a.et  /  b.et,
+        a.ht  /  b.ht,
+        a.P   /  b.P
    };
 } 
 
@@ -105,16 +116,18 @@ primitiveVar operator/(double a, const primitiveVar& b)
 {
 
     if (b.rho == 0.0) std::cout<<"rho division by zero";
-    if (b.rho_u == 0.0) std::cout<<"rho division by zero";
-    if (b.rho_v == 0.0) std::cout<<"rho division by zero";
-    if (b.rho_et == 0.0) std::cout<<"rho division by zero";
+    if (b.u == 0.0) std::cout<<"rho division by zero";
+    if (b.v == 0.0) std::cout<<"rho division by zero";
+    if (b.et == 0.0) std::cout<<"rho division by zero";
      
     return primitiveVar 
     {
-        a /  b.rho,
-        a / b.rho_u,
-        a / b.rho_v,
-        a / b.rho_et
+        a / b.rho,
+        a / b.u,
+        a / b.v,
+        a / b.et,
+        a / b.ht,
+        a / b.P
    };
 }
 
@@ -126,9 +139,11 @@ primitiveVar operator/(const primitiveVar& a, double b)
 
     return primitiveVar 
     {
-        a.rho  / b ,
-        a.rho_u / b ,
-        a.rho_v / b ,
-        a.rho_et / b
+        a.rho  / b,
+        a.u    / b,
+        a.v    / b,
+        a.et   / b,
+        a.ht   / b,
+        a.P    / b
    };
 } 

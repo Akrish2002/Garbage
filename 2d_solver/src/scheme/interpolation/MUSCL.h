@@ -13,8 +13,8 @@
  *  int     ny              :   Number of rows       --> Size of eta
  *  double  epsilon         :   MUSCL parameter 1
  *  double  kappa           :   MUSCL parameter 2
- *  consVar Q              :   State variables at cell centers   
- *  consVar Q_xi_L and     :   State variables on the left and right faces along each direction
+ *  consVar Q               :   State variables at cell centers   
+ *  consVar Q_xi_L and      :   State variables on the left and right faces along each direction
  *  consVar Q_xi_R 
  *  consVar Q_eta_L 
  *  consVar Q_eta_R 

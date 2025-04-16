@@ -1,10 +1,21 @@
-#ifndef CFD_SCHEMES_STATEVAR_H
-#define CFD_SCHEMES_STATEVAR_H
+#ifndef CFD_SCHEMES_CONSVAR_H
+#define CFD_SCHEMES_CONSVAR_H
 
+
+/* Definition
+ * ----------
+ *
+ *  double rho      :   Density
+ *  double rho_u    :   Density * u
+ *  double rho_v    :   Density * v
+ *  double rho_et   :   Density * et (Total internal energy)
+ *
+ * This struct helps store the conservative variables, essential Q from lecture notes
+ * Auto initializes them to zero value when called
+ */
 struct consVar
 {
     double rho;
-
     double rho_u;
     double rho_v;
     double rho_et;
