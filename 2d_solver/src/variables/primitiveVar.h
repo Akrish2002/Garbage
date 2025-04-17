@@ -8,9 +8,11 @@
  *  double rho  :    Density
  *  double u    :    U velocity
  *  double v    :    V velocity
- *  double ht   :    Total enthalpy
- *  double P    :    Pressure
  *  double et   :    Total internal energy
+ *  double ht   :    Total enthalpy
+ *
+ *  double P    :    Pressure
+ *  double a    :    Speed of sound
  *
  * This struct helps store the primitive variables
  * Auto initializes them to zero value when called
@@ -20,13 +22,16 @@ struct primitiveVar
     double rho;
     double u;
     double v;
-    double ht;
-    double P;
     double et;
+    double ht;
+
+    double P;
+    double a;
 
     primitiveVar
     (
-        double rho_ = 0.0, double u_ = 0.0, double v_ = 0.0, double et_ = 0.0, double ht_ = 0.0, double P_ = 0.0
+        double rho_ = 0.0, double u_ = 0.0, double v_ = 0.0, double et_ = 0.0, double ht_ = 0.0, 
+        double P_ = 0.0, double a_ = 0.0
 
     ) {}
 

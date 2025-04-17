@@ -19,7 +19,9 @@ primitiveVar operator+(const primitiveVar& a, const primitiveVar& b)
         a.v   + b.v,
         a.et  + b.et,
         a.ht  + b.ht,
-        a.P   + b.P
+
+        a.P   + b.P,
+        a.a   + b.a 
    };
 } 
 
@@ -35,7 +37,9 @@ primitiveVar operator-(const primitiveVar& a, const primitiveVar& b)
         a.v   - b.v,
         a.et  - b.et,
         a.ht  - b.ht,
-        a.P   - b.P
+
+        a.P   - b.P,
+        a.a   - b.a 
    };
 } 
 
@@ -50,7 +54,9 @@ primitiveVar primitiveVar::operator=(const primitiveVar& b)
         v   = b.v,
         et  = b.et,
         ht  = b.ht,
-        P   = b.P;
+
+        P   = b.P,
+        a   = b.a;
 
     return *this;
 } 
@@ -68,7 +74,9 @@ primitiveVar operator*(double a, const primitiveVar& b)
         a * b.v,
         a * b.et,
         a * b.ht,
-        a * b.P
+
+        a * b.P,
+        a * b.a 
 
     };
 } 
@@ -84,7 +92,9 @@ primitiveVar operator*(const primitiveVar& a, const primitiveVar& b)
         a.v   * b.v,
         a.et  * b.et,
         a.ht  * b.ht,
-        a.P   * b.P
+
+        a.P   * b.P,
+        a.a   * b.a
     };
 } 
 
@@ -95,10 +105,14 @@ primitiveVar operator*(const primitiveVar& a, const primitiveVar& b)
 primitiveVar operator/(const primitiveVar& a, const primitiveVar& b)
 {
 
-    if (b.rho == 0.0) std::cout<<"rho division by zero";
-    if (b.u == 0.0) std::cout<<"rho division by zero";
-    if (b.v == 0.0) std::cout<<"rho division by zero";
-    if (b.et == 0.0) std::cout<<"rho division by zero";
+    if (b.rho == 0.0) std::cout<<"Primitive var division by zero";
+    if (b.u   == 0.0) std::cout<<"Primitive var division by zero";
+    if (b.v   == 0.0) std::cout<<"Primitive var division by zero";
+    if (b.et  == 0.0) std::cout<<"Primitive var division by zero";
+    if (b.ht  == 0.0) std::cout<<"Primitive var division by zero";
+
+    if (b.P   == 0.0) std::cout<<"Primitive var division by zero";
+    if (b.a   == 0.0) std::cout<<"Primitive var division by zero";
      
     return primitiveVar 
     {
@@ -107,7 +121,9 @@ primitiveVar operator/(const primitiveVar& a, const primitiveVar& b)
         a.v   /  b.v,
         a.et  /  b.et,
         a.ht  /  b.ht,
-        a.P   /  b.P
+
+        a.P   /  b.P,
+        a.a   /  b.a
    };
 } 
 
@@ -115,10 +131,14 @@ primitiveVar operator/(const primitiveVar& a, const primitiveVar& b)
 primitiveVar operator/(double a, const primitiveVar& b)
 {
 
-    if (b.rho == 0.0) std::cout<<"rho division by zero";
-    if (b.u == 0.0) std::cout<<"rho division by zero";
-    if (b.v == 0.0) std::cout<<"rho division by zero";
-    if (b.et == 0.0) std::cout<<"rho division by zero";
+    if (b.rho == 0.0) std::cout<<"Primitive var is zero!";
+    if (b.u   == 0.0) std::cout<<"Primitive var is zero!";
+    if (b.v   == 0.0) std::cout<<"Primitive var is zero!";
+    if (b.et  == 0.0) std::cout<<"Primitive var is zero!";
+    if (b.ht  == 0.0) std::cout<<"Primitive var is zero!";
+
+    if (b.P   == 0.0) std::cout<<"Primitive var is zero!";
+    if (b.a   == 0.0) std::cout<<"Primitive var is zero!";
      
     return primitiveVar 
     {
@@ -127,7 +147,9 @@ primitiveVar operator/(double a, const primitiveVar& b)
         a / b.v,
         a / b.et,
         a / b.ht,
-        a / b.P
+
+        a / b.P,
+        a / b.a
    };
 }
 
@@ -135,7 +157,7 @@ primitiveVar operator/(double a, const primitiveVar& b)
 primitiveVar operator/(const primitiveVar& a, double b)
 {
 
-    if (b == 0.0) std::cout<<"rho division by zero";
+    if (b == 0.0) std::cout<<"Primitive Var being divided by zero";
 
     return primitiveVar 
     {
@@ -144,6 +166,8 @@ primitiveVar operator/(const primitiveVar& a, double b)
         a.v    / b,
         a.et   / b,
         a.ht   / b,
-        a.P    / b
+
+        a.P    / b,
+        a.a    / b
    };
 } 

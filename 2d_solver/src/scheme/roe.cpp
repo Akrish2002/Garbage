@@ -8,24 +8,28 @@
 #include "primitiveVar.h"
 #include "conversion.h"
 
+
 primitiveVar computeRoeAverage
 (
-    const primitiveVar& V_xi_L, const primitiveVar& V_xi_R,
+    const primitiveVar& V_L, const primitiveVar& V_R,
     const double& gamma
 )
 {
     primitiveVar V_avg;
     
     //Rho avg
-    V_avg.rho = std::sqrt(V_xi_L.rho * V_xi_R.rho);
+    V_avg.rho = std::sqrt(V_L.rho * V_R.rho);
    
-    V_avg.u   = (std::sqrt(V_xi_L.rho) * V_xi_L.u + std::sqrt(V_xi_R.rho) * V_xi_R.u) /
-                (std::sqrt(V_xi_L.rho) + std::sqrt(V_xi_R.rho));
+    V_avg.u   = (std::sqrt(V_L.rho) * V_L.u + std::sqrt(V_R.rho) * V_R.u) /
+                (std::sqrt(V_L.rho) + std::sqrt(V_R.rho));
 
-    V_avg.h   = (std::sqrt(V_xi_L.rho) * V_xi_L.h + std::sqrt(V_xi_R.rho) * V_xi_R.h) /
-                (std::sqrt(V_xi_L.rho) + std::sqrt(V_xi_R.rho));
+    V_avg.h   = (std::sqrt(V_L.rho) * V_L.h + std::sqrt(V_R.rho) * V_R.h) /
+                (std::sqrt(V_L.rho) + std::sqrt(V_R.rho));
 
+    V_avg.a   = (gamma - 1) * [V_avg.h - 0.5 * V_avg.u * V_avg
 
+    
+    
 }
 
 
@@ -43,12 +47,12 @@ void computeRoeFluxes
         {
 
             //xi direction
-            primitiveVar V_xi_L = convertConstoPrim(Q_xi_L, gamma);
-            primitiveVar V_xi_R = convertConstoPrim(Q_xi_R, gamma);
+            primitiveVar V_xi_L = convertConstoPrim(Q_xi_L[][], gamma);
+            primitiveVar V_xi_R = convertConstoPrim(Q_xi_R[][], gamma);
              
             //eta direction
-            primitiveVar V_eta_L = convertConstoPrim(Q_eta_L, gamma);
-            primitiveVar V_eta_R = convertConstoPrim(Q_eta_R, gamma);
+            primitiveVar V_eta_L = convertConstoPrim(Q_eta_L[][], gamma);
+            primitiveVar V_eta_R = convertConstoPrim(Q_eta_R[][], gamma);
             
             //Computing roe averages
         

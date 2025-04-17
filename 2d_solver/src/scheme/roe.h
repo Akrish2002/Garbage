@@ -13,18 +13,18 @@
  */
 primitiveVar computeRoeAverage
 (
-    const primitiveVar& V_xi_L, const primitiveVar& V_xi_R,
+    const primitiveVar& V_L, const primitiveVar& V_R,
     const double& gamma
 );
 
 
-/* Parameters requried
+/* Parameters required
  * -------------------
  *
- *  2D vector consVar Q_xi_L    : Conservative variables on the left along xi direction
- *  2D vector consVar Q_xi_R    : Conservative variables on the right along xi direction
- *  2D vector consVar Q_xi_L    : Conservative variables on the left along eta direction
- *  2D vector consVar Q_xi_R    : Conservative variables on the right along eta direction
+ *  2D vector consVar Q_xi_L     : Conservative variables on the left along xi direction
+ *  2D vector consVar Q_xi_R     : Conservative variables on the right along xi direction
+ *  2D vector consVar Q_eta_L    : Conservative variables on the left along eta direction
+ *  2D vector consVar Q_eta_R    : Conservative variables on the right along eta direction
  *
  * Performs all operations to compute roe on the faces
  */
