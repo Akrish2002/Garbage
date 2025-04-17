@@ -9,6 +9,8 @@ variables="src/variables"
 interpolation="src/scheme/interpolation"
 debugger="src/debugger"
 
+eigen="src/third_party/eigen-3.4.0"
+
 # Source files
 main="main.cpp"
 io_read_cpp="$io/read.cpp"
@@ -23,6 +25,8 @@ scheme_interpolation_MUSCL_cpp="$scheme/interpolation/MUSCL.cpp"
 scheme_interpolation_fluxlimiter_cpp="$scheme/interpolation/fluxlimiter.cpp"
 debugger_debug_cpp="$debugger/debug.cpp"
 
+eigen_cpp="$eigen"
+
 # Executable name
 exec_name="cfd_test"
 
@@ -32,7 +36,7 @@ compile_line="${1:-}"
 echo "Compiling .."
 
 # Compile command
-g++ -I $interpolation -I $variables -I $scheme -I $malloc -I $io -I $grid -I $debugger $compile_line \
+g++ -I $eigen -I $interpolation -I $variables -I $scheme -I $malloc -I $io -I $grid -I $debugger $compile_line \
     -o $exec_name \
     $main \
     $io_read_cpp \
@@ -45,6 +49,6 @@ g++ -I $interpolation -I $variables -I $scheme -I $malloc -I $io -I $grid -I $de
     $variables_conversion_cpp \
     $scheme_interpolation_MUSCL_cpp \
     $scheme_interpolation_fluxlimiter_cpp \
-    $debugger_debug_cpp
+    $debugger_debug_cpp \
 
 echo "Compiled successfully!"

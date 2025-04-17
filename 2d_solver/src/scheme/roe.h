@@ -3,6 +3,22 @@
 
 #include "consVar.h"
 
+#include <Eigen/Dense>
+
+/* Definition
+ * ----------
+ *
+ *  This defines a struct to store R, lamda and R_inv, so it can be easily accessed
+ */
+struct RlamdaRinv
+{
+    Eigen::Matrix4d R;
+    Eigen::Matrix4d Rinv;
+    Eigen::Matrix4d lamda;
+
+};
+
+
 /* Parameters required
  * -------------------
  *
@@ -16,6 +32,16 @@ primitiveVar computeRoeAverage
     const primitiveVar& V_L, const primitiveVar& V_R,
     const double& gamma
 );
+
+
+/* Parameters Required
+ * -------------------
+ *
+ *  primitiveVar V_avg  : The averaged values computed for Roe averaging
+ *
+ *  This builds and returns the 4x4 matrix of R, Rinv and lamda
+ */
+RlamdaRinv buildRlamdaRinv(const primtiveVar& V_avg);
 
 
 /* Parameters required

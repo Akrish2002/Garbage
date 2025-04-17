@@ -8,7 +8,6 @@
 #include "primitiveVar.h"
 #include "conversion.h"
 
-
 primitiveVar computeRoeAverage
 (
     const primitiveVar& V_L, const primitiveVar& V_R,
@@ -17,21 +16,38 @@ primitiveVar computeRoeAverage
 {
     primitiveVar V_avg;
     
-    //Rho avg
+    double rho_L, rho_R;
+    rho_L = std::sqrt(V_L.rho);
+    rho_R = std::sqrt(V_R.rho);
+
     V_avg.rho = std::sqrt(V_L.rho * V_R.rho);
    
-    V_avg.u   = (std::sqrt(V_L.rho) * V_L.u + std::sqrt(V_R.rho) * V_R.u) /
-                (std::sqrt(V_L.rho) + std::sqrt(V_R.rho));
+    V_avg.u   = (rho_L * V_L.u + rho_R * V_R.u) / (rho_L + rho_R);
 
-    V_avg.h   = (std::sqrt(V_L.rho) * V_L.h + std::sqrt(V_R.rho) * V_R.h) /
-                (std::sqrt(V_L.rho) + std::sqrt(V_R.rho));
+    V_avg.v   = (rho_L * V_L.v + rho_R * V_R.v) / (rho_L + rho_R);
 
-    V_avg.a   = (gamma - 1) * [V_avg.h - 0.5 * V_avg.u * V_avg
+    V_avg.h   = (rho_L * V_L.h + rho_R * V_R.h) /(rho_L + rho_R);
 
+    V_avg.a   = (gamma - 1) * (V_avg.h - 0.5 * (V_avg.u * V_avg.u + V_avg.v * V_avg.v))
     
-    
+    return V_avg;
 }
 
+RlamdaRinv buildRlamdaRinv(const primitiveVar& V_avg)
+{
+    RlamdaRinv RlRinv;
+
+    double u    = V_avg.u;  
+    double v    = V_avg.v;
+    double ht   = V_avg.ht;
+    double a    = V_avg.a;
+
+    double nx  
+    double nx  
+
+
+
+} 
 
 void computeRoeFluxes
 (
@@ -58,10 +74,8 @@ void computeRoeFluxes
         
             //xi
             computeRoeAverage(V
-            computeRoeAverage(V
         
             //eta
-            computeRoeAverage(V
             computeRoeAverage(V
         }
     }
