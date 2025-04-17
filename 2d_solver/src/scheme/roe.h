@@ -1,6 +1,7 @@
 #ifndef CFD_SCHEMES_ROE
 #define CFD_SCHEMES_ROE
 
+#include "grid.h"
 #include "consVar.h"
 
 #include <Eigen/Dense>
@@ -41,7 +42,13 @@ primitiveVar computeRoeAverage
  *
  *  This builds and returns the 4x4 matrix of R, Rinv and lamda
  */
-RlamdaRinv buildRlamdaRinv(const primtiveVar& V_avg);
+RlamdaRinv buildRlamdaRinv
+(
+    const primtiveVar& V_avg
+    const double S_area,
+    const double S_nx,
+    const double S_ny
+);
 
 
 /* Parameters required
@@ -58,7 +65,8 @@ void computeRoeFluxes
 (
     std::vector<std::vector<consVar>>& Q_xi_L, std::vector<std::vector<consVar>>& Q_xi_R,
     std::vector<std::vector<consVar>>& Q_eta_L, std::vector<std::vector<consVar>>& Q_eta_R
-
+    const double& gamma
+    Grid grid
 );
 
 

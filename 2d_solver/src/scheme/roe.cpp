@@ -33,7 +33,13 @@ primitiveVar computeRoeAverage
     return V_avg;
 }
 
-RlamdaRinv buildRlamdaRinv(const primitiveVar& V_avg)
+RlamdaRinv buildRlamdaRinv
+(
+    const primitiveVar& V_avg
+    const double S_area,
+    const double S_nx,
+    const double S_ny
+)
 {
     RlamdaRinv RlRinv;
 
@@ -42,10 +48,27 @@ RlamdaRinv buildRlamdaRinv(const primitiveVar& V_avg)
     double ht   = V_avg.ht;
     double a    = V_avg.a;
 
-    double nx  
-    double nx  
+    // 2. Building R column by column
+    RlRinv.R<<
+                1,                      1,                  1,                      0
+                u - a * S_nx,           u,                  u + a * S_nx,           S_ny
+                v - a * S_ny,           v,                  v + a * S_ny,           -1 * S_nx
+               ht - a * (u*nx + v*ny)   0.5 * (u*u + v*v)   ht + a * (u*nx + v*ny)  u*ny - v*nx
 
+    // 3. Building lamda
+    double un = u*S_nx + v*S_ny;
 
+    RlRinv.lamda = Eigen::Matrix4d::Zero();
+    //Filling the diagonals
+    RlRinv.lamda(0,0) = std::abs(un - a);
+    RlRinv.lamda(1,1) = std::abs(  un  );
+    RlRinv.lamda(2,2) = std::abs(un + a);
+    RlRinv.lamda(3,3) = std::abs(  un  );
+ 
+    // 4. The inverse of R
+    RlRinv.Rinv = RlRinv.R.inverse();
+
+    return RlRinv;
 
 } 
 
@@ -54,12 +77,16 @@ void computeRoeFluxes
     std::vector<std::vector<consVar>>& Q_xi_L, std::vector<std::vector<consVar>>& Q_xi_R,
     std::vector<std::vector<consVar>>& Q_eta_L, std::vector<std::vector<consVar>>& Q_eta_R
     const double& gamma
+    Grid grid
 )
 {
-    //Converting QLs and QRs to primitives
-    for(size_t )
+    int nx = grid.getnx();
+    int ny = grid.getny();
+    
+    //Running the loop to perform flux reconstruction at the faces
+    for(int i = 1; i < ny; i++)
     {
-        for(size_t)
+        for(int j = 0; j < nx; j++)
         {
 
             //xi direction
