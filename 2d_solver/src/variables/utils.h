@@ -3,6 +3,7 @@
 
 #include "consVar.h"
 #include "primitiveVar.h"
+#include "fluxVar.h"
 
 #include <Eigen/Dense>
 
@@ -40,5 +41,15 @@ inline Vec4 converttoVec(const consVar& q)
     return v;
 
 };
+
+
+fluxVar computeFlux
+(
+    const consVar &Q,
+    double Sx,
+    double Sy,
+    double Smag,
+    double gamma
+);
 
 #endif

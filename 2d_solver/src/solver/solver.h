@@ -13,7 +13,9 @@ class Solver
     
         Grid grid_;
         double gamma_, CFL_;
+
         std::vector<std::vector<consVar>> Q_;
+        std::vector<std::vector<fluxVar>> E_, F_;
 
         //Initialize conditions
         void inititalize();
