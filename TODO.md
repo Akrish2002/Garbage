@@ -4,7 +4,10 @@ This file tracks pending improvements and cleanup tasks for the 2D finite-volume
 
 ---
 
-- [ ] **Recheck Implemention of Eigen**
+- [ ] **S_xi_nx and so on**  
+    Difference in grid size might cause seg fault if indices are incorrectly called, recheck implementation
+
+- [ ] **Recheck Implemention of Eigen**  
     See if the R and lamda matrices have been properly initialized. Check to see if the function works as indented
 
 - [ ] **Simplify `AddHaloCells_2D()`**  
