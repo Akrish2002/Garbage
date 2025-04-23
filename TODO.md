@@ -3,6 +3,8 @@
 This file tracks pending improvements and cleanup tasks for the 2D finite-volume Euler solver implementation.
 
 ---
+- [ ] **fluxVar**  
+    Changed = operation overloading in fluxVar.h from reference to non-refernce kind and it compiled, why?  
 
 - [ ] **S_xi_nx and so on**  
     Difference in grid size might cause seg fault if indices are incorrectly called, recheck implementation
