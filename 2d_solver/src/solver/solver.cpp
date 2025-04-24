@@ -2,17 +2,53 @@
 
 #include <string>
 #include <cmath>
+#include <cstddef>
 
 #include "read.h"
 #include "write.h"
+
 #include "allocate.h"
-#include "MUSCL.h"
+
 #include "utils.h"
+
+#include "MUSCL.h"
 #include "central.h"
+#include "roe.h"
 
 //Constructor
-Solver::Solver(const std::string &gridpath, const double gamma, double CFL)
+Solver::Solver(
+                    const std::string &gridpath, 
+
+                    const double gamma, const double Cp, const double R 
+                    
+                    const double P, const double T, const double c, const double M                    
+
+                    const double rho, const double u, const double v,
+                    
+                    const double CFL
+                )
 {
+
+//-------------------------------------------------------------------------------------------------------------
+
+    //Transport properties and initial conditions
+    gamma_  =   gamma;
+    Cp_     =   Cp;
+    R_      =   R;
+    
+    P_ = P;
+    T_ = T;
+    c_ = c;
+    M_ = M;
+    
+    rho_    =   rho;
+    u_      =   u;
+    v_      =   v;
+    et_     =   P_ /(rho * (gamma_ - 1)) + 0.5 * ((u_ * u_ + v_ * v_));
+    ht_     =   et_ + P_ / rho_;    
+
+//-------------------------------------------------------------------------------------------------------------
+
     grid_(gridpath);
     grid_.addHaloCells_2D();
     grid_.computeMetrics(2); //Change this to not take in "2" since halocells addition is for 2D
@@ -20,6 +56,8 @@ Solver::Solver(const std::string &gridpath, const double gamma, double CFL)
     //Getting size of grid, this is not including halocells
     nx_ = grid_.getnx();
     ny_ = grid_.getny();
+
+//-------------------------------------------------------------------------------------------------------------
 
     //Initialize the sizes of; 
 
@@ -49,8 +87,35 @@ Solver::Solver(const std::string &gridpath, const double gamma, double CFL)
 
 void Solver::applyICs()
 {
-    for(size_t i = 0; i < nx + 2    
+    
+    for(size_t i = 0; i < ny + 1; i++)
+    {
+        for(size_t j = 0; j < nx + 1; j++)
+        {
+            V_inf_[i][j].rho    =   rho_;
+            V_inf_[i][j].u      =   u_;
+            V_inf_[i][j].v      =   v_;
+            V_inf_[i][j].et     =   et_;
+            V_inf_[i][j].ht     =   ht_;
+            V_inf_[i][j].P      =   P_;
+            V_inf_[i][j].T      =   T_;
+            V_inf_[i][j].a      =   c_;
 
+            V_[i][j].rho    =   rho_;
+            V_[i][j].u      =   u_;
+            V_[i][j].v      =   v_;
+            V_[i][j].et     =   et_;
+            V_[i][j].ht     =   ht_;
+            V_[i][j].P      =   P_;
+            V_[i][j].T      =   T_;
+            V_[i][j].a      =   c_;
+
+            Q_[i][j].rho     =   rho_
+            Q_[i][j].rho_u   =   rho_ * u_;
+            Q_[i][j].rho_v   =   rho_ * v_;
+            Q_[i][j].rho_et  =   rho_ * et_;
+        }
+    }
 
 
 }
@@ -59,7 +124,63 @@ void Solver::applyICs()
 void Solver::applyBCs()
 {
     
+    //Supersonic Inlet
+    for(size_t i = 0; i < ny + 1; i++)
+    {
+        V_[i][0] = V_inf_[i][0];
+        Q_[i][0] = convertPrimtoCons(V_inf_[i][0]);
+    }
+   
+    //Supersonic Outlet 
+    for(size_t i = 0; i < ny + 1; i++)
+    {
+        V_[i][ny] = V_inf_[i][ny - 1];
+        Q_[i][ny] = convertPrimtoCons(V_inf_[i][ny - 1]);
+    }
 
+    //Slip Wall + Adiabatic
+    for(size_t i = 1; i < nx; i++) 
+    {
+        double S_eta_x;
+        double S_eta_y;
+        double S_eta_x_2;
+        double S_eta_y_2;
+
+        //Lower
+        S_eta_x = grid_.getnxEta(0, i - 1);
+        S_eta_y = grid_.getnyEta(0, i - 1);
+       
+        S_eta_x_2 = S_eta_x * S_eta_x;
+        S_eta_y_2 = S_eta_y * S_eta_y;
+ 
+        V_[0][i].u = ((S_eta_x_2 - S_eta_y_2) * V_[1][i].u - (2 * S_eta_x * S_eta_y) * V_[1][i].v)
+                     / (S_eta_x_2 + S_eta_y_2);
+
+        V_[0][i].v = ((-2 * S_eta_x * S_eta_y) * V_[1][i].u + (S_eta_x_2 - S_eta_y_2) * V_[1][i].v)
+                     / (S_eta_x_2 + S_eta_y_2);
+
+        V_[0][i].T = V_[1][i].T;
+
+        Q_[0][i] = convertPrimtoCons(V_[0][i]); 
+        
+        //Upper
+        S_eta_x = grid_.getnxEta(ny - 1, i - 1);
+        S_eta_y = grid_.getnyEta(ny - 1, i - 1);
+       
+        S_eta_x_2 = S_eta_x * S_eta_x;
+        S_eta_y_2 = S_eta_y * S_eta_y;
+
+        V_[ny][i].u = ((S_eta_x_2 - S_eta_y_2) * V_[ny - 1][i].u - (2 * S_eta_x * S_eta_y) * V_[ny - 1][i].v)
+                     / (S_eta_x_2 + S_eta_y_2);
+
+        V_[ny][i].v = ((-2 * S_eta_x * S_eta_y) * V_[ny - 1][i].u + (S_eta_x_2 - S_eta_y_2) * V_[ny - 1][i].v)
+                     / (S_eta_x_2 + S_eta_y_2);
+
+        V_[ny][i].T = V_[ny - 1][i].T;
+                     
+        Q_[ny][i] = convertPrimtoCons(V_[ny - 1][i]); 
+
+    } 
 
 }
 

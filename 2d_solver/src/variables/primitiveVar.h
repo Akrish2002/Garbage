@@ -26,12 +26,13 @@ struct primitiveVar
     double ht;
 
     double P;
+    double T;
     double a;
 
     primitiveVar
     (
         double rho_ = 0.0, double u_ = 0.0, double v_ = 0.0, double et_ = 0.0, double ht_ = 0.0, 
-        double P_ = 0.0, double a_ = 0.0
+        double P_ = 0.0, double T = 0.0, double a_ = 0.0 //This is hardcoded
 
     ) {}
 

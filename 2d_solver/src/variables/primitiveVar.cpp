@@ -21,6 +21,7 @@ primitiveVar operator+(const primitiveVar& a, const primitiveVar& b)
         a.ht  + b.ht,
 
         a.P   + b.P,
+        a.T   + b.T,
         a.a   + b.a 
    };
 } 
@@ -39,6 +40,7 @@ primitiveVar operator-(const primitiveVar& a, const primitiveVar& b)
         a.ht  - b.ht,
 
         a.P   - b.P,
+        a.T   - b.T,
         a.a   - b.a 
    };
 } 
@@ -56,6 +58,7 @@ primitiveVar primitiveVar::operator=(const primitiveVar& b)
         ht  = b.ht,
 
         P   = b.P,
+        T   = b.T,
         a   = b.a;
 
     return *this;
@@ -76,6 +79,7 @@ primitiveVar operator*(double a, const primitiveVar& b)
         a * b.ht,
 
         a * b.P,
+        a * b.T,
         a * b.a 
 
     };
@@ -94,6 +98,7 @@ primitiveVar operator*(const primitiveVar& a, const primitiveVar& b)
         a.ht  * b.ht,
 
         a.P   * b.P,
+        a.T   * b.T,
         a.a   * b.a
     };
 } 
@@ -112,6 +117,7 @@ primitiveVar operator/(const primitiveVar& a, const primitiveVar& b)
     if (b.ht  == 0.0) std::cout<<"Primitive var division by zero";
 
     if (b.P   == 0.0) std::cout<<"Primitive var division by zero";
+    if (b.T   == 0.0) std::cout<<"Primitive var division by zero";
     if (b.a   == 0.0) std::cout<<"Primitive var division by zero";
      
     return primitiveVar 
@@ -123,6 +129,7 @@ primitiveVar operator/(const primitiveVar& a, const primitiveVar& b)
         a.ht  /  b.ht,
 
         a.P   /  b.P,
+        a.T   /  b.T,
         a.a   /  b.a
    };
 } 
@@ -138,6 +145,7 @@ primitiveVar operator/(double a, const primitiveVar& b)
     if (b.ht  == 0.0) std::cout<<"Primitive var is zero!";
 
     if (b.P   == 0.0) std::cout<<"Primitive var is zero!";
+    if (b.T   == 0.0) std::cout<<"Primitive var is zero!";
     if (b.a   == 0.0) std::cout<<"Primitive var is zero!";
      
     return primitiveVar 
@@ -149,6 +157,7 @@ primitiveVar operator/(double a, const primitiveVar& b)
         a / b.ht,
 
         a / b.P,
+        a / b.T,
         a / b.a
    };
 }
@@ -168,6 +177,7 @@ primitiveVar operator/(const primitiveVar& a, double b)
         a.ht   / b,
 
         a.P    / b,
+        a.T    / b,
         a.a    / b
    };
 } 

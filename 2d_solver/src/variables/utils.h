@@ -23,6 +23,23 @@ primitiveVar convertConstoPrim
 
 );
 
+
+/* Parameters required
+ * -------------------
+ *
+ *  primitiveVar& V     : Primitive variable V is passed by reference
+ *  double gamma        : Specific heat
+ *
+ *  Function converts primitive variables to conservative variables using definitions provided in the lecture notes
+ */
+primitiveVar convertPrimtoCons
+(
+    const primitiveVar& V,
+    const double gamma
+
+);
+
+
 /* Parameters required
  * -------------------
  *  
@@ -31,13 +48,13 @@ primitiveVar convertConstoPrim
  *  This function converts the struct consVar to a vector for matrix operations
  */
 using Vec4 = Eigen::Matrix<double,4,1>;
-inline Vec4 convertconsVartoVec(const consVar& q)
+inline Vec4 convertconsVartoVec(const consVar& Q)
 {
     Vec4 v;
-    v << q.rho,
-         q.rho_u,
-         q.rho_v,
-         q.rho_et;
+    v << Q.rho,
+         Q.rho_u,
+         Q.rho_v,
+         Q.rho_et;
 
     return v;
 
@@ -52,13 +69,13 @@ inline Vec4 convertconsVartoVec(const consVar& q)
  *  This function converts the struct fluxVar to a vector for matrix operations
  */
 using Vec4 = Eigen::Matrix<double,4,1>;
-inline Vec4 convertfluxVartoVec(const fluxVar& q)
+inline Vec4 convertfluxVartoVec(const fluxVar& F)
 {
     Vec4 f;
-    f << q.rho_flux,
-         q.rho_u_flux,
-         q.rho_v_flux,
-         q.rho_ht_flux;
+    f << F.rho_flux,
+         F.rho_u_flux,
+         F.rho_v_flux,
+         F.rho_ht_flux;
 
     return f;
 

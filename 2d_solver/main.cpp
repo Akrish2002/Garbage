@@ -28,6 +28,15 @@ int main()
     double c = 295.0;    
     double M = 3.0;
     
+    double rho;
+    rho = P / (R * T);
+    
+    double u;
+    u = M * c;
+     
+    double v;
+    v = 0;
+
     //Iterations
     double N = 1000;
     double CFL = 0.5;
@@ -41,7 +50,17 @@ int main()
         //Reading Grid
         //Adding Halo cells
         //Computing Metrics
-    Solver Case(gridpath, gamma, CFL);
+    Solver Case(
+                    gridpath, 
+
+                    gamma, Cp, R
+                    
+                    P, T, c, M
+        
+                    rho, u, v, 
+
+                    CFL
+                );
     //Applying initial and boundary conditions
     //Iterating till convergence
     Case.setup;     

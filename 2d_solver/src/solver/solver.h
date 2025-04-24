@@ -11,7 +11,13 @@ class Solver
 
     private:
     
-        double gamma_, CFL_;
+        double gamma_, Cp_, R_;
+        double P_, T_, c_, M_;
+        
+        double rho_, u_, v_, et_, ht_;
+
+        double N_;
+        double CFL_;
 
         Grid grid_;
         int nx_, ny_;
@@ -19,6 +25,9 @@ class Solver
         std::vector<std::vector<consVar>> Q_;
         std::vector<std::vector<consVar>> Q_xi_L, Q_xi_R;
         std::vector<std::vector<consVar>> Q_eta_L, Q_eta_R;
+
+        std::vector<std::vector<primitiveVar>> V_inf_;
+        std::vector<std::vector<primitiveVar>> V_;
 
         std::vector<std::vector<fluxVar>> E_;
         std::vector<std::vector<fluxVar>> E_L, E_R;

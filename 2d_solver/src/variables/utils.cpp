@@ -29,6 +29,25 @@ primitiveVar convertConstoPrim
 }
 
 
+consVar convertPrimtoCons
+(
+    const primitiveVar& V,
+    const double gamma
+)
+{
+    consVar Q;
+    
+    Q.rho       =   V.rho;
+    Q.rho_u     =   V.rho * V.u;    
+    Q.rho_v     =   V.rho * V.v;    
+    Q.rho_et    =   V.rho * V.et;    
+
+    return Q;
+
+}
+        
+
+
 void computeXiFlux
 (
     Grid& grid_,
