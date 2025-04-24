@@ -3,6 +3,9 @@
 This file tracks pending improvements and cleanup tasks for the 2D finite-volume Euler solver implementation.
 
 ---
+- [ ] **Print statments**    
+    Since after MUSCL implementation, I have stopped adding print statements, add to track solver progress.  
+
 - [ ] **fluxVar**  
     Changed = operation overloading in fluxVar.h from reference to non-refernce kind and it compiled, why?  
 
