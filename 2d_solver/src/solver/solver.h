@@ -11,16 +11,28 @@ class Solver
 
     private:
     
-        Grid grid_;
         double gamma_, CFL_;
 
+        Grid grid_;
+        int nx_, ny_;
+
         std::vector<std::vector<consVar>> Q_;
-        std::vector<std::vector<fluxVar>> E_, F_;
+        std::vector<std::vector<consVar>> Q_xi_L, Q_xi_R;
+        std::vector<std::vector<consVar>> Q_eta_L, Q_eta_R;
+
+        std::vector<std::vector<fluxVar>> E_;
+        std::vector<std::vector<fluxVar>> E_L, E_R;
+
+        std::vector<std::vector<fluxVar>> F_;
+        std::vector<std::vector<fluxVar>> F_L, F_R;
 
         //Initialize conditions
-        void inititalize();
+        void applyICs();
         void applyBCs();
-        double compute_dt();
+
+        void computeFlux();
+
+        double computedt();
         void computeResiduals();
         void stepSolution(double dt);
 

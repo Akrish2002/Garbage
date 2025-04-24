@@ -17,7 +17,7 @@ struct fluxVar
       double rho_ht_flux_ = 0.0
     ) {}
   
-    fluxVar& operator=(const fluxVar& b);
+    fluxVar operator=(const fluxVar& b);
 
 };
 

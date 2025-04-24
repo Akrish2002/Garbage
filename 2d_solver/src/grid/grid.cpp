@@ -26,7 +26,7 @@ Grid::Grid(std::string fpath, bool write)
     //Reading grid coords
     //Passed by refernce, so I get back the right nx and ny values
     read(fpath, coords_2D, nx, ny);
-
+    
     //Allocating memory
     allocate_2D(ny, nx, n_2D);
     

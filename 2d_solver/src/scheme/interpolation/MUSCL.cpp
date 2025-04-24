@@ -70,8 +70,8 @@ void performMUSCL(
         Q_xi_R[i][1] = 0.5*(Q[i][0] + Q[i][1]);
                 
         //East Boundary
-        Q_xi_L[i][nx] = 0.5*(Q[i][nx - 1] + Q[i][nx]);
-        Q_xi_R[i][nx] = 0.5*(Q[i][nx - 1] + Q[i][nx]);
+        Q_xi_L[i][nx + 1] = 0.5*(Q[i][nx - 1] + Q[i][nx]);
+        Q_xi_R[i][nx + 1] = 0.5*(Q[i][nx - 1] + Q[i][nx]);
     }
 
 

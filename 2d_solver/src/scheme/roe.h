@@ -3,6 +3,9 @@
 
 #include "grid.h"
 #include "consVar.h"
+#include "primitiveVar.h"
+#include "fluxVar.h"
+#include "utils.h"
 
 #include <Eigen/Dense>
 
@@ -44,10 +47,11 @@ primitiveVar computeRoeAverage
  */
 RlamdaRinv buildRlamdaRinv
 (
-    const primtiveVar& V_avg
-    const double S_area,
+    const primitiveVar& V_avg,
+
     const double S_nx,
-    const double S_ny
+    const double S_ny,
+    const double S_area
 );
 
 
@@ -61,12 +65,22 @@ RlamdaRinv buildRlamdaRinv
  *
  * Performs all operations to compute roe on the faces
  */
-void computeRoeFluxes
+void performRoe
 (
-    std::vector<std::vector<consVar>>& Q_xi_L, std::vector<std::vector<consVar>>& Q_xi_R,
-    std::vector<std::vector<consVar>>& Q_eta_L, std::vector<std::vector<consVar>>& Q_eta_R
+    Grid& grid_,
+
+    std::vector<std::vector<consVar>>& Q_xi_L,  std::vector<std::vector<consVar>>& Q_xi_R,
+    std::vector<std::vector<consVar>>& Q_eta_L, std::vector<std::vector<consVar>>& Q_eta_R,
+
+    std::vector<std::vector<fluxVar>>& E_,
+    std::vector<std::vector<fluxVar>>& E_L,
+    std::vector<std::vector<fluxVar>>& E_R,
+
+    std::vector<std::vector<fluxVar>>& F_,
+    std::vector<std::vector<fluxVar>>& F_L,
+    std::vector<std::vector<fluxVar>>& F_R,
+
     const double& gamma
-    Grid grid
 );
 
 
