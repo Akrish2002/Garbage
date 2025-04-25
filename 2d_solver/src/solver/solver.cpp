@@ -376,16 +376,27 @@ void Solver::integratethroughTime()
 void Solver::setup()
 {
 
+    bool debug_garbage = true;
+
     applyICs();
     applyBCs();
+
     std::cout<<"--V_.u: "<<V_[10][10].u<<std::endl;
     std::cout<<"--Q_.u: "<<Q_[10][10].rho_u<<std::endl<<std::endl;
+
+    if(debug_garbage)
+    {
+        exportprimitiveVartoCSV(V_, "primitiveVar.csv");
+        exit(0);
+    }
 
 }
 
 
 void Solver::run(int iter)
 {
+    
+    bool debug_garbage = false;
 
     for(int i = 1; i < iter; i++)
     {
@@ -458,9 +469,10 @@ void Solver::run(int iter)
         std::cout<<"--V[5][5].u: "<<V_[5][5].u<<std::endl<<std::endl;
         std::cout<<"--V[10][10].u: "<<V_[10][10].u<<std::endl<<std::endl;
         std::cout<<"--V[15][15].u: "<<V_[15][15].u<<std::endl<<std::endl;
-        if(i == 10) 
+
+        if(i == 10 && debug_garbage) 
         {
-            exportprimitiveVartoCSV(V_, "PrimitiveVar.csv");
+            exportprimitiveVartoCSV(V_, "primitiveVar.csv");
             std::exit(0);
         }
     }
