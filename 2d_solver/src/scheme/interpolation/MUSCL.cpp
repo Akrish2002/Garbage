@@ -47,13 +47,15 @@ void performMUSCL(
             Q_xi_L[i][j] = Q[i][j - 1]  + 0.25 * epsilon * ( 
                                            (Q[i][j - 1] - Q[i][j - 2]) * (1.0 - kappa) * fluxlimiter(r_L, FL) 
                                         +  (Q[i][  j  ] - Q[i][j - 1]) * (1.0 + kappa) * fluxlimiter(1.0/r_L, FL)); 
-                
+            Q_xi_L[i][j] = Q[i][j - 1];
+
             Q_xi_R[i][j] = Q[i][  j  ]  + 0.25 * epsilon * (
                                            (Q[i][j + 1] - Q[i][  j  ]) * (1.0 - kappa) * fluxlimiter(r_R, FL) 
                                         +  (Q[i][  j  ] - Q[i][j - 1]) * (1.0 + kappa) * fluxlimiter(1.0/r_L, FL)); 
-            
+            Q_xi_R[i][j] = Q[i][  j  ];
         }
     }
+    
     
     //2. For the boundary faces
     for(size_t i = 1; i < ny; i++)
@@ -67,6 +69,9 @@ void performMUSCL(
         Q_xi_R[i][nx + 1] = 0.5*(Q[i][nx - 1] + Q[i][nx]);
     }
 
+    std::cout<<"--Q[10][10]: "<<Q[10][10].rho_u<<std::endl;
+    std::cout<<"--Q_xi_L[10][10]: "<<Q_xi_L[10][10].rho_u<<std::endl;
+    std::cout<<"--Q_xi_R[10][10]: "<<Q_xi_R[10][10].rho_u<<std::endl;
 
     //eta direction
     //1. Second order in the interior cells
@@ -88,10 +93,13 @@ void performMUSCL(
                                            (Q[j - 1][i] - Q[j - 2][i]) * (1.0 - kappa) * fluxlimiter(r_L, FL) 
                                         +  (Q[  j  ][i] - Q[j - 1][i]) * (1.0 + kappa) * fluxlimiter(1.0/r_L, FL)); 
                 
+            Q_eta_L[j][i] = Q[j - 1][i];
+
             Q_eta_R[j][i] = Q[  j  ][i]  + 0.25 * epsilon * (
                                            (Q[j + 1][i] - Q[  j  ][i]) * (1.0 - kappa) * fluxlimiter(r_R, FL) 
                                         +  (Q[  j  ][i] - Q[j - 1][i]) * (1.0 + kappa) * fluxlimiter(1.0/r_L, FL)); 
             
+            Q_eta_R[j][i] = Q[j][i];
         }
     }
 
@@ -107,5 +115,7 @@ void performMUSCL(
         Q_eta_R[ny][i] = 0.5*(Q[ny - 1][i] + Q[ny][i]);
     }
 
+    std::cout<<"--Q_eta_L[10][10]: "<<Q_eta_L[10][10].rho_u<<std::endl;
+    std::cout<<"--Q_eta_R[10][10]: "<<Q_eta_R[10][10].rho_u<<std::endl;
 }
 

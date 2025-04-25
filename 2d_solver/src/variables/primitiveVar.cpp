@@ -85,6 +85,24 @@ primitiveVar operator*(double a, const primitiveVar& b)
     };
 } 
 
+primitiveVar operator*(const primitiveVar& b, double a)
+{
+
+    return primitiveVar
+    {
+        a * b.rho,
+        a * b.u,
+        a * b.v,
+        a * b.et,
+        a * b.ht,
+
+        a * b.P,
+        a * b.T,
+        a * b.a 
+
+    };
+} 
+
 //2. primitiveVar * primitiveVar
 primitiveVar operator*(const primitiveVar& a, const primitiveVar& b)
 {

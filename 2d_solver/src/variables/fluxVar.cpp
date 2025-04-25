@@ -43,7 +43,19 @@ fluxVar fluxVar::operator=(const fluxVar& b)
 }
 
 
-fluxVar operator*(double a, const fluxVar& F)
+fluxVar operator*(const fluxVar& F, double a)
+{
+    return fluxVar
+    {
+        a * F.rho_flux,
+        a * F.rho_u_flux,
+        a * F.rho_v_flux,
+        a * F.rho_ht_flux
+    };
+}
+
+
+fluxVar operator*( double a, const fluxVar& F)
 {
     return fluxVar
     {
@@ -65,6 +77,7 @@ fluxVar operator*(const fluxVar& a, const fluxVar& b)
         a.rho_ht_flux * b.rho_ht_flux
     };
 }
+
 
 fluxVar operator/(const fluxVar& a, const fluxVar& b)
 {

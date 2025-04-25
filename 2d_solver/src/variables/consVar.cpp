@@ -65,6 +65,18 @@ consVar operator*(double a, const consVar& b)
     };
 } 
 
+consVar operator*(const consVar& b, double a)
+{
+
+    return consVar
+    {
+        a * b.rho,
+        a * b.rho_u,
+        a * b.rho_v,
+        a * b.rho_et
+    };
+} 
+
 //2. consVar * consVar
 consVar operator*(const consVar& a, const consVar& b)
 {

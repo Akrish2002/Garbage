@@ -252,13 +252,18 @@ void Solver::computeFlux()
             gamma_
          ); 
 
+        std::cout<<"--E_R[10][10].rho_u_flux: "<<E_R[10][10].rho_u_flux<<std::endl;
+        std::cout<<"--E_L[10][10].rho_u_flux: "<<E_L[10][10].rho_u_flux<<std::endl;
+
+        std::cout<<"--F_R[10][10].rho_u_flux: "<<F_R[10][10].rho_u_flux<<std::endl;
+        std::cout<<"--F_L[10][10].rho_u_flux: "<<F_L[10][10].rho_u_flux<<std::endl;
 
 }
 
 double Solver::computedt()
 {
 
-    return dt_ = 1e-8;
+    return dt_ = 1e-5;
 
 }
 
@@ -267,6 +272,8 @@ void Solver::integratethroughTime()
     double S_xi_L, S_xi_R;
     double S_eta_L, S_eta_R;
     double S_vol;
+
+    bool debug_garbage = true;
 
     for(size_t i = 1; i < ny_; i++)
     {
@@ -282,17 +289,77 @@ void Solver::integratethroughTime()
             S_eta_L = grid_.getareaEta(i - 1, j - 1);
             S_eta_R = grid_.getareaEta(  i  , j - 1);
 
-            E_L = convertfluxVartoVec(E_[i][  j  ] * S_xi_L);
-            E_R = convertfluxVartoVec(E_[i][j + 1] * S_xi_R);
+            //Debugging
+            if (debug_garbage) {
+                if(i == 10 && j == 10)
+                {
+                    std::cout<<"--S_vol: "<<S_vol<<std::endl;
+                    std::cout<<"--S_xi_L: "<<S_xi_L<<std::endl;
+                    std::cout<<"--S_xi_R: "<<S_xi_R<<std::endl;
+                    std::cout<<"--S_eta_L: "<<S_eta_L<<std::endl;
+                    std::cout<<"--S_eta_R: "<<S_eta_R<<std::endl;
+                    
+                }
+            }
 
-            F_L = convertfluxVartoVec(F_[  i  ][  j  ] * S_eta_L);
-            F_R = convertfluxVartoVec(F_[i + 1][  j  ] * S_eta_R);
+            E_L = convertfluxVartoVec(E_[i][  j  ]); //* S_xi_L);
+            E_R = convertfluxVartoVec(E_[i][j + 1]); // * S_xi_R);
+
+            F_L = convertfluxVartoVec(F_[  i  ][  j  ]); //* S_eta_L);
+            F_R = convertfluxVartoVec(F_[i + 1][  j  ]); //* S_eta_R);
 
             Q = convertconsVartoVec(Q_[i][j]);
             
-            Q1 = Q - dt_ * ((E_R - E_L) + (F_R - F_L)) / S_vol; 
+            //Debugging
+            if (debug_garbage) {
+                if(i == 10 && j == 10)
+                {
+                    std::cout<<"--E_L[10][10].rho_u_flux bfr update: "<<E_L(1)<<std::endl;
+                    std::cout<<"--E_R[10][10].rho_u_flux bfr update: "<<E_R(1)<<std::endl;
 
+                    std::cout<<"--F_L[10][10].rho_u_flux bfr update: "<<F_L(1)<<std::endl;
+                    std::cout<<"--F_R[10][10].rho_u_flux bfr update: "<<F_R(1)<<std::endl;
+
+                    std::cout<<"--Q_[10][10].rho_u bfr update: "<<Q(1)<<std::endl;
+                }
+            }
+
+            Q1 = Q - dt_ * ((E_R*S_xi_R - E_L*S_xi_L) + (F_R*S_eta_R - F_L*S_eta_R)) / S_vol; 
+
+            //Debugging
+           // if (debug_garbage) {
+           //     if(i == 10 && j == 10)
+           //     {
+           //         std::cout<<"--asdf: \n"<<E_R*S_xi_R<<std::endl;
+           //     }
+           // }
+
+            //Debugging
+            if (debug_garbage) {
+                if(i == 10 && j == 10)
+                {
+                    std::cout<<"--Q_[10][10].rho_u after update: "<<Q1(1)<<std::endl;
+                    
+                    //exit(0);
+                }
+            }
+
+            // Compute residual here:
+
+            // Update next iteration
             Q_[i][j] = convertVectoconsVar(Q1);
+            V_[i][j] = convertConstoPrim(Q_[i][j], gamma_);
+            
+            //Debugging
+            if (debug_garbage) {
+                if(i == 10 && j == 10)
+                {
+                    std::cout<<"--Q_[10][10].rho_u: "<<Q_[i][j].rho_u<<std::endl;
+                    std::cout<<"--V_[10][10].u: "<<V_[i][j].u<<std::endl;
+
+                    //exit(0);
+                }
+            }
 
             //Q1[i][j] = Q_[i][j] 
 
@@ -311,6 +378,8 @@ void Solver::setup()
 
     applyICs();
     applyBCs();
+    std::cout<<"--V_.u: "<<V_[10][10].u<<std::endl;
+    std::cout<<"--Q_.u: "<<Q_[10][10].rho_u<<std::endl<<std::endl;
 
 }
 
@@ -320,8 +389,13 @@ void Solver::run(int iter)
 
     for(int i = 1; i < iter; i++)
     {
+    
+        std::cout<<"--Iter: "<<i<<"\n";
+
         //1. Interpolate flux values from center to face
         //Not including limiter, since default is minmod
+
+        std::cout<<"///////////////////////\n";
 
         std::cout<<"--Starting MUSCL interpolation \n";
         performMUSCL
@@ -335,6 +409,8 @@ void Solver::run(int iter)
         );
         
 
+        std::cout<<"------------------------------------\n";
+
         //2.
         
         //2.1 
@@ -343,6 +419,8 @@ void Solver::run(int iter)
         std::cout<<"--Computing flux on all faces from interpolated Q \n";
         computeFlux();
        
+        std::cout<<"------------------------------------\n";
+
         //2.2 
         //Perform Roe
         std::cout<<"--Perfoming roe flux reconstruction \n";
@@ -362,19 +440,29 @@ void Solver::run(int iter)
             gamma_
         );
         
+        std::cout<<"------------------------------------\n";
         
         //3.
         std::cout<<"--Integrating through time \n";
         integratethroughTime();
 
+        std::cout<<"------------------------------------\n";
         
         //4.
         std::cout<<"--Reapplying BCs \n";
         applyBCs();
         
-        std::cout<<"--Iter: "<<i<<"\n\n";
-        if(i == 20)
+        std::cout<<"------------------------------------\n";
+
+        std::cout<<"--V[0][0].u: "<<V_[0][0].u<<std::endl<<std::endl;
+        std::cout<<"--V[5][5].u: "<<V_[5][5].u<<std::endl<<std::endl;
+        std::cout<<"--V[10][10].u: "<<V_[10][10].u<<std::endl<<std::endl;
+        std::cout<<"--V[15][15].u: "<<V_[15][15].u<<std::endl<<std::endl;
+        if(i == 10) 
+        {
+            exportprimitiveVartoCSV(V_, "PrimitiveVar.csv");
             std::exit(0);
+        }
     }
 
 }

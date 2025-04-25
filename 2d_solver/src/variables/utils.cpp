@@ -2,6 +2,7 @@
 
 #include <cmath>
 #include <cstddef>
+#include <iostream>
 
 primitiveVar convertConstoPrim
 (
@@ -70,11 +71,38 @@ void computeXiFlux
             double S_xi_x       =   grid_.getnxXi(i - 1, j - 1); 
             double S_xi_y       =   grid_.getnyXi(i - 1, j - 1); 
             double S_xi_area    =   grid_.getareaXi(i - 1, j - 1); 
+            
+            S_xi_x = S_xi_x * S_xi_area;
+            S_xi_y = S_xi_y * S_xi_area;
 
             double U_ = (S_xi_x * V.u + S_xi_y * V.v) / S_xi_area;
-        
+            
+            //Debugging
+         //   if(i == 10 && j == 10)
+         //  { 
+         //       std::cout<<"--S_xi_x[10][10]: "<<S_xi_x<<std::endl;
+         //       std::cout<<"--S_xi_y[10][10]: "<<S_xi_y<<std::endl;
+         //       std::cout<<"--S_xi_area[10][10]: "<<S_xi_area<<std::endl;
+         //       
+         //       std::cout<<"--U_[10][10]: "<<U_<<std::endl;
+         //       
+         //       std::cout<<"--V.rho[10][10]: "<<V.rho<<std::endl;
+         //       std::cout<<"--V.u[10][10]: "<<V.u<<std::endl;
+         //       std::cout<<"--V.P[10][10]: "<<V.P<<std::endl;
+         //   
+         //  }
+  
             E_LorR[i][j].rho_flux      = V.rho * U_;
             E_LorR[i][j].rho_u_flux    = V.rho * V.u  * U_ + (S_xi_x / S_xi_area) * V.P;
+         //   //Debugging
+         //   if(i == 10 && j == 10)
+         //   {
+
+         //       std::cout<<"--E_LorR[10][10].rho_u_flux: "<<E_LorR[10][10].rho_u_flux<<std::endl;
+         //   
+         //       exit(0);
+    
+         //   }
             E_LorR[i][j].rho_v_flux    = V.rho * V.v  * U_ + (S_xi_y / S_xi_area) * V.P;
             E_LorR[i][j].rho_ht_flux   = V.rho * V.ht * U_;
        }
@@ -107,6 +135,9 @@ void computeEtaFlux
             double S_eta_y       =   grid_.getnyEta(j - 1, i - 1); 
             double S_eta_area    =   grid_.getareaEta(j - 1, i - 1); 
             
+            S_eta_x = S_eta_x * S_eta_area;
+            S_eta_y = S_eta_y * S_eta_area;
+
             double V_ = (S_eta_x * V.u + S_eta_y * V.v) / S_eta_area;
         
             F_LorR[j][i].rho_flux      = V.rho * V_;
