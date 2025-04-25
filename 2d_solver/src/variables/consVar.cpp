@@ -41,9 +41,9 @@ consVar operator-(const consVar& a, const consVar& b)
 consVar consVar::operator=(const consVar& b)
 {
 
-    rho    = b.rho;
-    rho_u  = b.rho_u;
-    rho_v  = b.rho_v;
+    rho    = b.rho,
+    rho_u  = b.rho_u,
+    rho_v  = b.rho_v,
     rho_et = b.rho_et;
 
     return *this;

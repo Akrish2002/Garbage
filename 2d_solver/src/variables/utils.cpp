@@ -31,8 +31,7 @@ primitiveVar convertConstoPrim
 
 consVar convertPrimtoCons
 (
-    const primitiveVar& V,
-    const double gamma
+    const primitiveVar& V
 )
 {
     consVar Q;

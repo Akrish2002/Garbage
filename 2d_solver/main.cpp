@@ -37,6 +37,10 @@ int main()
     double v;
     v = 0;
 
+    //MUSCL parameters
+    double epsilon  = 0;
+    double kappa    = 0;
+ 
     //Iterations
     double N = 1000;
     double CFL = 0.5;
@@ -53,17 +57,20 @@ int main()
     Solver Case(
                     gridpath, 
 
-                    gamma, Cp, R
+                    gamma, Cp, R,
                     
-                    P, T, c, M
+                    P, T, c, M,
         
                     rho, u, v, 
 
+                    epsilon, kappa,
+                    N,
                     CFL
                 );
     //Applying initial and boundary conditions
     //Iterating till convergence
-    Case.setup;     
+    Case.setup();     
+
     Case.run(N);    
 
 

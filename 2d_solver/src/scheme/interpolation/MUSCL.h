@@ -28,7 +28,7 @@ void performMUSCL(
     std::vector<std::vector<consVar>>& Q,
     std::vector<std::vector<consVar>>& Q_xi_L, std::vector<std::vector<consVar>>& Q_xi_R,
     std::vector<std::vector<consVar>>& Q_eta_L, std::vector<std::vector<consVar>>& Q_eta_R,
-    const std::string& FL
+    const std::string& FL = "minmod"
 
 );
 

@@ -61,6 +61,8 @@ class Grid
         double getnxEta  (int i,int j) const { return S_eta_x_2D[i][j] / S_eta_2D[i][j]; }
         double getnyEta  (int i,int j) const { return S_eta_y_2D[i][j] / S_eta_2D[i][j]; }
 
+        double getVol    (int i,int j) const {           return cc_vol_2D[i][j];         }
+
         //Destructor
         //Initially implemented destructor, but read online that it is not necessary as the memory is deallocated once it goes out of scope. 
         // ~Grid();

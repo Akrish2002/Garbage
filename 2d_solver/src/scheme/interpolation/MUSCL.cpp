@@ -22,17 +22,6 @@ void performMUSCL(
 
 )
 {
-    //Memory allocation
-    allocate_2D(ny + 1, nx + 1, Q); //Including Halo cells
-
-    allocate_2D(ny + 1, nx + 1, Q_xi_L);
-    allocate_2D(ny + 1, nx + 1, Q_xi_R);
-
-    allocate_2D(ny + 1, nx + 1, Q_eta_L);
-    allocate_2D(ny + 1, nx + 1, Q_eta_R);
-
-    //std::vector<std::vector<consVar>> r_R, r_L;
-    
 
     //xi direction
     //1. Second order in the interior cells

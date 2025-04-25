@@ -7,6 +7,7 @@
 #include "grid.h"
 
 #include <Eigen/Dense>
+using Vec4 = Eigen::Matrix<double,4,1>;
 
 /* Parameters required
  * -------------------
@@ -32,11 +33,9 @@ primitiveVar convertConstoPrim
  *
  *  Function converts primitive variables to conservative variables using definitions provided in the lecture notes
  */
-primitiveVar convertPrimtoCons
+consVar convertPrimtoCons
 (
-    const primitiveVar& V,
-    const double gamma
-
+    const primitiveVar& V
 );
 
 
@@ -47,28 +46,26 @@ primitiveVar convertPrimtoCons
  *
  *  This function converts the struct consVar to a vector for matrix operations
  */
-using Vec4 = Eigen::Matrix<double,4,1>;
 inline Vec4 convertconsVartoVec(const consVar& Q)
 {
-    Vec4 v;
-    v << Q.rho,
+    Vec4 q;
+    q << Q.rho,
          Q.rho_u,
          Q.rho_v,
          Q.rho_et;
 
-    return v;
+    return q;
 
-};
+}
 
 
 /* Parameters required
  * -------------------
  *  
- *  fluxVar Q   : Flux variable structure 
+ *  fluxVar F   : Flux variable structure 
  *
  *  This function converts the struct fluxVar to a vector for matrix operations
  */
-using Vec4 = Eigen::Matrix<double,4,1>;
 inline Vec4 convertfluxVartoVec(const fluxVar& F)
 {
     Vec4 f;
@@ -79,7 +76,27 @@ inline Vec4 convertfluxVartoVec(const fluxVar& F)
 
     return f;
 
-};
+}
+
+
+/* Parameters required
+ * -------------------
+ *  
+ *  Vec4   : Column vector of size 4x1 (Check inline defn below)
+ *
+ *  This function converts the column conservative vector to the struct consVar
+ */
+inline consVar convertVectoconsVar(const Vec4 &v) 
+{
+    consVar Q;
+
+    Q.rho           = v(0);
+    Q.rho_u         = v(1);
+    Q.rho_v         = v(2);
+    Q.rho_et        = v(3);
+
+    return Q;
+}
 
 
 /* Parameters required
@@ -89,15 +106,16 @@ inline Vec4 convertfluxVartoVec(const fluxVar& F)
  *
  *  This function converts the column flux vector to the struct fluxVar
  */
-using Vec4 = Eigen::Matrix<double,4,1>;
 inline fluxVar convertVectofluxVar(const Vec4 &v) 
 {
-    fluxVar f;
-    f.rho_flux      = v(0);
-    f.rho_u_flux    = v(1);
-    f.rho_v_flux    = v(2);
-    f.rho_ht_flux   = v(3);
-    return f;
+    fluxVar F;
+
+    F.rho_flux      = v(0);
+    F.rho_u_flux    = v(1);
+    F.rho_v_flux    = v(2);
+    F.rho_ht_flux   = v(3);
+
+    return F;
 }
 
 

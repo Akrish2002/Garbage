@@ -19,6 +19,6 @@ inline double limiter_minmod(double r)
 
 //Write other limiters also
 
-consVar fluxlimiter(const consVar& r, const std::string& type = "minmod");
+consVar fluxlimiter(const consVar& r, const std::string& type);
 
 #endif
