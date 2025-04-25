@@ -3,6 +3,10 @@
 This file tracks pending improvements and cleanup tasks for the 2D finite-volume Euler solver implementation.
 
 ---
+- [ ] Implement residual calculation and dt computation from given CFL, currently hardcoded
+
+- [ ] Edited the consVar.cpp with one off ratiocheck function, check to see it is not causing any issues
+
 - [ ] **Print statments**    
     Since after MUSCL implementation, I have stopped adding print statements, add to track solver progress.  
 
@@ -22,5 +26,5 @@ This file tracks pending improvements and cleanup tasks for the 2D finite-volume
 
 ---
 
-_Last updated: April 23, 2025_<br>
+_Last updated: April 25, 2025_<br>
 

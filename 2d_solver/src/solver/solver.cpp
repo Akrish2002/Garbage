@@ -3,6 +3,7 @@
 #include <string>
 #include <cmath>
 #include <cstddef>
+#include <iostream>
 
 #include "read.h"
 #include "write.h"
@@ -93,7 +94,8 @@ Solver::Solver(
 
     allocate_2D(ny_ + 1, nx_ + 1, F_L);
     allocate_2D(ny_ + 1, nx_ + 1, F_R);
-
+    
+    std::cout<<"--Allocated memory for Q, V, E and F \n";
 }
 
 
@@ -128,7 +130,8 @@ void Solver::applyICs()
             Q_[i][j].rho_et  =   rho_ * et_;
         }
     }
-
+    
+    std::cout<<"--Applied initial conditions\n";
 
 }
 
@@ -193,7 +196,8 @@ void Solver::applyBCs()
         Q_[ny_][i] = convertPrimtoCons(V_[ny_ - 1][i]); 
 
     } 
-
+    
+    
 }
 
 void Solver::computeFlux()
@@ -318,6 +322,8 @@ void Solver::run(int iter)
     {
         //1. Interpolate flux values from center to face
         //Not including limiter, since default is minmod
+
+        std::cout<<"--Starting MUSCL interpolation \n";
         performMUSCL
         (
             nx_, ny_,
@@ -334,10 +340,12 @@ void Solver::run(int iter)
         //2.1 
         //Function that calls computeXiFlux and computeEtaFlux twice each to compute flux on each 
         //side in each direction
+        std::cout<<"--Computing flux on all faces from interpolated Q \n";
         computeFlux();
        
         //2.2 
         //Perform Roe
+        std::cout<<"--Perfoming roe flux reconstruction \n";
         performRoe
         (
             grid_,
@@ -356,14 +364,17 @@ void Solver::run(int iter)
         
         
         //3.
+        std::cout<<"--Integrating through time \n";
         integratethroughTime();
 
         
         //4.
+        std::cout<<"--Reapplying BCs \n";
         applyBCs();
         
-        std::cout<<"Iter: "<<i<<std::endl;
-            
+        std::cout<<"--Iter: "<<i<<"\n\n";
+        if(i == 20)
+            std::exit(0);
     }
 
 }

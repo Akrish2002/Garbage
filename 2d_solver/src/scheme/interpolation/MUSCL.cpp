@@ -5,6 +5,7 @@
 #include <cmath>
 #include <string>
 #include <array>
+#include <iostream>
 
 #include "allocate.h"
 #include "debug.h"
@@ -14,10 +15,13 @@
 void performMUSCL(
     
     int nx, int ny,
+
     double epsilon, double kappa,
+
     std::vector<std::vector<consVar>>& Q,
     std::vector<std::vector<consVar>>& Q_xi_L, std::vector<std::vector<consVar>>& Q_xi_R,
     std::vector<std::vector<consVar>>& Q_eta_L, std::vector<std::vector<consVar>>& Q_eta_R,
+
     const std::string& FL
 
 )
