@@ -65,13 +65,15 @@ void performMUSCL(
         Q_xi_R[i][1] = 0.5*(Q[i][0] + Q[i][1]);
                 
         //East Boundary
-        Q_xi_L[i][nx + 1] = 0.5*(Q[i][nx - 1] + Q[i][nx]);
-        Q_xi_R[i][nx + 1] = 0.5*(Q[i][nx - 1] + Q[i][nx]);
+        Q_xi_L[i][nx] = 0.5*(Q[i][nx - 1] + Q[i][nx]);
+        Q_xi_R[i][nx] = 0.5*(Q[i][nx - 1] + Q[i][nx]);
+
+        //Q_xi_R[i][nx].rho_u = 0.5*(Q[i][nx - 2].rho_u + Q[i][nx - 1].rho_u);
     }
 
-    std::cout<<"--Q[10][10]: "<<Q[10][10].rho_u<<std::endl;
-    std::cout<<"--Q_xi_L[10][10]: "<<Q_xi_L[10][10].rho_u<<std::endl;
-    std::cout<<"--Q_xi_R[10][10]: "<<Q_xi_R[10][10].rho_u<<std::endl;
+    std::cout<<"--Q[10][nx].rho_u: "<<Q[10][nx].rho_u<<std::endl;
+    std::cout<<"--Q_xi_L[10][nx].rho_u: "<<Q_xi_L[10][nx].rho_u<<std::endl;
+    std::cout<<"--Q_xi_R[10][nx].rho_u: "<<Q_xi_R[10][nx].rho_u<<std::endl;
 
     //eta direction
     //1. Second order in the interior cells
@@ -115,7 +117,7 @@ void performMUSCL(
         Q_eta_R[ny][i] = 0.5*(Q[ny - 1][i] + Q[ny][i]);
     }
 
-    std::cout<<"--Q_eta_L[10][10]: "<<Q_eta_L[10][10].rho_u<<std::endl;
-    std::cout<<"--Q_eta_R[10][10]: "<<Q_eta_R[10][10].rho_u<<std::endl;
+    std::cout<<"--Q_eta_L[10][nx].rho_u: "<<Q_eta_L[10][nx].rho_u<<std::endl;
+    std::cout<<"--Q_eta_R[10][nx].rho_u: "<<Q_eta_R[10][nx].rho_u<<std::endl;
 }
 

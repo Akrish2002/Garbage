@@ -133,7 +133,9 @@ void computeXiFlux
     
     int nx,
     int ny,
-    double gamma
+    double gamma,
+
+    bool debug_garbage = false
 );
 
 

@@ -57,9 +57,12 @@ void computeXiFlux
 
     int nx,
     int ny,
-    double gamma
+    double gamma,
+    
+    bool debug_garbage
 )
 {
+    
     for(size_t i = 1; i < ny; i++)
     {
         for(size_t j = 1; j < nx + 1; j++)
@@ -78,31 +81,36 @@ void computeXiFlux
             double U_ = (S_xi_x * V.u + S_xi_y * V.v) / S_xi_area;
             
             //Debugging
-         //   if(i == 10 && j == 10)
-         //  { 
-         //       std::cout<<"--S_xi_x[10][10]: "<<S_xi_x<<std::endl;
-         //       std::cout<<"--S_xi_y[10][10]: "<<S_xi_y<<std::endl;
-         //       std::cout<<"--S_xi_area[10][10]: "<<S_xi_area<<std::endl;
-         //       
-         //       std::cout<<"--U_[10][10]: "<<U_<<std::endl;
-         //       
-         //       std::cout<<"--V.rho[10][10]: "<<V.rho<<std::endl;
-         //       std::cout<<"--V.u[10][10]: "<<V.u<<std::endl;
-         //       std::cout<<"--V.P[10][10]: "<<V.P<<std::endl;
-         //   
-         //  }
+            if(i == 10 && j == nx && debug_garbage)
+           { 
+                std::cout<<"--S_xi_x[10][nx]: "<<S_xi_x<<std::endl;
+                std::cout<<"--S_xi_y[10][nx]: "<<S_xi_y<<std::endl;
+                std::cout<<"--S_xi_area[10][nx]: "<<S_xi_area<<std::endl;
+                
+                std::cout<<"--U_[10][nx]: "<<U_<<std::endl;
+                
+                std::cout<<"--V.rho[10][nx]: "<<V.rho<<std::endl;
+                std::cout<<"--V.u[10][nx]: "<<V.u<<std::endl;
+                std::cout<<"--V.v[10][nx]: "<<V.v<<std::endl;
+                std::cout<<"--V.et[10][nx]: "<<V.et<<std::endl;
+                std::cout<<"--V.P[10][nx]: "<<V.P<<std::endl;
+            
+           }
   
             E_LorR[i][j].rho_flux      = V.rho * U_;
             E_LorR[i][j].rho_u_flux    = V.rho * V.u  * U_ + (S_xi_x / S_xi_area) * V.P;
-         //   //Debugging
-         //   if(i == 10 && j == 10)
-         //   {
 
-         //       std::cout<<"--E_LorR[10][10].rho_u_flux: "<<E_LorR[10][10].rho_u_flux<<std::endl;
-         //   
-         //       exit(0);
+            //Debugging
+            if(i == 10 && j == nx && debug_garbage)
+            {
+
+                std::cout<<"--E_LorR[10][nx - 1].rho_u_flux: "<<E_LorR[10][nx - 1].rho_u_flux<<std::endl;
+                std::cout<<"--E_LorR[10][nx].rho_u_flux: "<<E_LorR[10][nx].rho_u_flux<<std::endl;
+            
+                exit(0);
     
-         //   }
+            }
+
             E_LorR[i][j].rho_v_flux    = V.rho * V.v  * U_ + (S_xi_y / S_xi_area) * V.P;
             E_LorR[i][j].rho_ht_flux   = V.rho * V.ht * U_;
        }

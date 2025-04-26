@@ -20,11 +20,17 @@ struct consVar
     double rho_v;
     double rho_et;
     
-    consVar
-    (
-        double rho_ = 0.0, double rho_u_ = 0.0, double rho_v_ = 0.0, double rho_et_ = 0.0
+    consVar(double rho_=0.0,
+            double rho_u_=0.0,
+            double rho_v_=0.0,
+            double rho_et_=0.0)
+        : rho(rho_), rho_u(rho_u_), rho_v(rho_v_), rho_et(rho_et_) {} 
+   
+   // consVar
+   // (
+   //     double rho_ = 0.0, double rho_u_ = 0.0, double rho_v_ = 0.0, double rho_et_ = 0.0
 
-    ) {}
+   // )
 
     consVar operator=(const consVar& b);
 

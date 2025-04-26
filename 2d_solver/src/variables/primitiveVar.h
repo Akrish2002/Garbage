@@ -29,12 +29,18 @@ struct primitiveVar
     double T;
     double a;
 
-    primitiveVar
-    (
-        double rho_ = 0.0, double u_ = 0.0, double v_ = 0.0, double et_ = 0.0, double ht_ = 0.0, 
-        double P_ = 0.0, double T = 0.0, double a_ = 0.0 //This is hardcoded
+   // primitiveVar
+   // (
+   //     double rho_ = 0.0, double u_ = 0.0, double v_ = 0.0, double et_ = 0.0, double ht_ = 0.0, 
+   //     double P_ = 0.0, double T = 0.0, double a_ = 0.0 //This is hardcoded
 
-    ) {}
+   // ) {}
+
+    primitiveVar(double rho_ = 0.0,  double u_  = 0.0,  double v_  = 0.0,
+                 double et_  = 0.0,  double ht_ = 0.0,
+                 double P_   = 0.0,  double T_  = 0.0,  double a_  = 0.0)
+        : rho(rho_), u(u_), v(v_), et(et_), ht(ht_),
+          P(P_),    T(T_), a(a_) {}
 
     primitiveVar operator=(const primitiveVar& b);
 

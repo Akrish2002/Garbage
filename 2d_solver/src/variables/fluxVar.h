@@ -9,13 +9,22 @@ struct fluxVar
     double rho_v_flux;   // F₃ ≡ y‑momentum flux
     double rho_ht_flux;  // F₄ ≡ energy flux
 
-    fluxVar
-    (
-      double rho_flux_ = 0.0,
-      double rho_u_flux_ = 0.0,
-      double rho_v_flux_ = 0.0,
-      double rho_ht_flux_ = 0.0
-    ) {}
+    //fluxVar
+    //(
+    //  double rho_flux_ = 0.0,
+    //  double rho_u_flux_ = 0.0,
+    //  double rho_v_flux_ = 0.0,
+    //  double rho_ht_flux_ = 0.0
+    //) {}
+
+    fluxVar(double rho_flux_   = 0.0,
+            double rho_u_flux_ = 0.0,
+            double rho_v_flux_ = 0.0,
+            double rho_ht_flux_= 0.0)
+        : rho_flux   (rho_flux_),
+          rho_u_flux (rho_u_flux_),
+          rho_v_flux (rho_v_flux_),
+          rho_ht_flux(rho_ht_flux_) {}
   
     fluxVar operator=(const fluxVar& b);
 
