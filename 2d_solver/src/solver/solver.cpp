@@ -149,8 +149,8 @@ void Solver::applyBCs()
     //Supersonic Outlet 
     for(size_t i = 0; i < ny_ + 1; i++)
     {
-        V_[i][ny_] = V_inf_[i][ny_ - 1];
-        Q_[i][ny_] = convertPrimtoCons(V_inf_[i][ny_ - 1]);
+        V_[i][nx_] = V_inf_[i][nx_ - 1];
+        Q_[i][nx_] = convertPrimtoCons(V_inf_[i][nx_ - 1]);
     }
 
     //Slip Wall + Adiabatic
@@ -252,11 +252,15 @@ void Solver::computeFlux()
             gamma_
          ); 
 
-        std::cout<<"--E_R[10][10].rho_u_flux: "<<E_R[10][10].rho_u_flux<<std::endl;
-        std::cout<<"--E_L[10][10].rho_u_flux: "<<E_L[10][10].rho_u_flux<<std::endl;
+        std::cout<<"--E_R[10][nx_ - 1].rho_u_flux: "<<E_R[10][nx_ - 1].rho_u_flux<<std::endl;
+        std::cout<<"--E_R[10][nx_ - 1].rho_u_flux: "<<E_R[10][nx_ - 1].rho_u_flux<<std::endl;
+        std::cout<<"--E_L[10][nx_].rho_u_flux: "<<E_L[10][nx_].rho_u_flux<<std::endl;
+        std::cout<<"--E_L[10][nx_].rho_u_flux: "<<E_L[10][nx_].rho_u_flux<<std::endl;
 
-        std::cout<<"--F_R[10][10].rho_u_flux: "<<F_R[10][10].rho_u_flux<<std::endl;
-        std::cout<<"--F_L[10][10].rho_u_flux: "<<F_L[10][10].rho_u_flux<<std::endl;
+        std::cout<<"--F_R[10][nx_ - 1].rho_u_flux: "<<F_R[10][nx_ - 1].rho_u_flux<<std::endl;
+        std::cout<<"--F_R[10][nx_ - 1].rho_u_flux: "<<F_R[10][nx_ - 1].rho_u_flux<<std::endl;
+        std::cout<<"--F_L[10][nx_].rho_u_flux: "<<F_L[10][nx_].rho_u_flux<<std::endl;
+        std::cout<<"--F_L[10][nx_].rho_u_flux: "<<F_L[10][nx_].rho_u_flux<<std::endl;
 
 }
 
@@ -273,7 +277,7 @@ void Solver::integratethroughTime()
     double S_eta_L, S_eta_R;
     double S_vol;
 
-    bool debug_garbage = true;
+    bool debug_garbage = false;
 
     for(size_t i = 1; i < ny_; i++)
     {
@@ -324,7 +328,7 @@ void Solver::integratethroughTime()
                 }
             }
 
-            Q1 = Q - dt_ * ((E_R*S_xi_R - E_L*S_xi_L) + (F_R*S_eta_R - F_L*S_eta_R)) / S_vol; 
+            Q1 = Q - dt_ * ((E_R*S_xi_R - E_L*S_xi_L) + (F_R*S_eta_R - F_L*S_eta_L)) / S_vol; 
 
             //Debugging
            // if (debug_garbage) {
@@ -376,7 +380,7 @@ void Solver::integratethroughTime()
 void Solver::setup()
 {
 
-    bool debug_garbage = true;
+    bool debug_garbage = false;
 
     applyICs();
     applyBCs();
@@ -396,7 +400,7 @@ void Solver::setup()
 void Solver::run(int iter)
 {
     
-    bool debug_garbage = false;
+    bool debug_garbage = true;
 
     for(int i = 1; i < iter; i++)
     {
@@ -465,12 +469,10 @@ void Solver::run(int iter)
         
         std::cout<<"------------------------------------\n";
 
-        std::cout<<"--V[0][0].u: "<<V_[0][0].u<<std::endl<<std::endl;
-        std::cout<<"--V[5][5].u: "<<V_[5][5].u<<std::endl<<std::endl;
-        std::cout<<"--V[10][10].u: "<<V_[10][10].u<<std::endl<<std::endl;
-        std::cout<<"--V[15][15].u: "<<V_[15][15].u<<std::endl<<std::endl;
+        std::cout<<"--V[0][nx - 1].u: "<<V_[0][nx_ - 1].u<<std::endl;
+        std::cout<<"--V[0][nx].u: "<<V_[0][nx_].u<<std::endl<<std::endl;
 
-        if(i == 10 && debug_garbage) 
+        if(i == 5 && debug_garbage) 
         {
             exportprimitiveVartoCSV(V_, "primitiveVar.csv");
             std::exit(0);
