@@ -24,6 +24,10 @@ primitiveVar convertConstoPrim
     //Energy
     V.et = Q.rho_et/Q.rho;
     V.ht = V.et + V.P/V.rho;      
+    
+    //T and a
+    V.T = V.P / (V.rho * 287.0);
+    V.a = std::sqrt(gamma * V.P / V.rho);
    
     return V; 
 
@@ -57,12 +61,13 @@ void computeXiFlux
 
     int nx,
     int ny,
-    double gamma,
-    
-    bool debug_garbage
+
+    double gamma
 )
 {
     
+    bool debug_garbage = false;
+
     for(size_t i = 1; i < ny; i++)
     {
         for(size_t j = 1; j < nx + 1; j++)
@@ -127,6 +132,7 @@ void computeEtaFlux
 
     int nx,
     int ny,
+
     double gamma
 )
 {

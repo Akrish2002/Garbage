@@ -161,6 +161,8 @@ void Solver::applyBCs()
         double S_eta_x_2;
         double S_eta_y_2;
 
+        bool debug_garbage = false;
+
         //Lower
         S_eta_x = grid_.getnxEta(0, i - 1);
         S_eta_y = grid_.getnyEta(0, i - 1);
@@ -185,6 +187,15 @@ void Solver::applyBCs()
         S_eta_x_2 = S_eta_x * S_eta_x;
         S_eta_y_2 = S_eta_y * S_eta_y;
 
+        //Debugging 
+        if(debug_garbage && i == nx_ - 1)
+        {
+            std::cout<<"--Upper BCs\n";
+            std::cout<<"--S_eta_x[ny - 1, i - 1]: "<<S_eta_x<<std::endl;
+            std::cout<<"--S_eta_y[ny - 1, i - 1]: "<<S_eta_y<<std::endl;
+            
+        }
+
         V_[ny_][i].u = ((S_eta_x_2 - S_eta_y_2) * V_[ny_ - 1][i].u - (2 * S_eta_x * S_eta_y) * V_[ny_ - 1][i].v)
                      / (S_eta_x_2 + S_eta_y_2);
 
@@ -193,6 +204,17 @@ void Solver::applyBCs()
 
         V_[ny_][i].T = V_[ny_ - 1][i].T;
                      
+        //Debugging 
+        if(debug_garbage && i == nx_ - 1)
+        {
+            std::cout<<"--V_[ny_ - 1][i].u: "<<V_[ny_ - 1][i].u<<std::endl;
+            std::cout<<"--V_[ny_ - 1][i].v: "<<V_[ny_ - 1][i].v<<std::endl;
+
+            std::cout<<"--V_[ny_ - 1][i].T: "<<V_[ny_ - 1][i].T<<std::endl;
+            
+            exit(0);
+        }
+
         Q_[ny_][i] = convertPrimtoCons(V_[ny_ - 1][i]); 
 
     } 
@@ -202,6 +224,7 @@ void Solver::applyBCs()
 
 void Solver::computeFlux()
 {
+        bool debug_garbage = false;
 
          computeXiFlux
          (
@@ -212,6 +235,7 @@ void Solver::computeFlux()
 
             nx_,
             ny_,
+            
             gamma_
          );  
 
@@ -225,8 +249,9 @@ void Solver::computeFlux()
 
             nx_,
             ny_,
+            
             gamma_
-        ); 
+          ); 
 
          computeEtaFlux
          (
@@ -237,6 +262,7 @@ void Solver::computeFlux()
 
             nx_,
             ny_,
+            
             gamma_
          ); 
 
@@ -249,25 +275,28 @@ void Solver::computeFlux()
 
             nx_,
             ny_,
+            
             gamma_
          ); 
 
-        std::cout<<"--E_R[10][nx_ - 1].rho_u_flux: "<<E_R[10][nx_ - 1].rho_u_flux<<std::endl;
-        std::cout<<"--E_R[10][nx_ - 1].rho_u_flux: "<<E_R[10][nx_ - 1].rho_u_flux<<std::endl;
-        std::cout<<"--E_L[10][nx_].rho_u_flux: "<<E_L[10][nx_].rho_u_flux<<std::endl;
-        std::cout<<"--E_L[10][nx_].rho_u_flux: "<<E_L[10][nx_].rho_u_flux<<std::endl;
+        if(debug_garbage)
+        {   
+            std::cout<<"--E_R[10][nx_ - 1].rho_u_flux: "<<E_R[10][nx_ - 1].rho_u_flux<<std::endl;
+            std::cout<<"--E_R[10][nx_ - 1].rho_u_flux: "<<E_R[10][nx_ - 1].rho_u_flux<<std::endl;
+            std::cout<<"--E_L[10][nx_].rho_u_flux: "<<E_L[10][nx_].rho_u_flux<<std::endl;
+            std::cout<<"--E_L[10][nx_].rho_u_flux: "<<E_L[10][nx_].rho_u_flux<<std::endl;
 
-        std::cout<<"--F_R[10][nx_ - 1].rho_u_flux: "<<F_R[10][nx_ - 1].rho_u_flux<<std::endl;
-        std::cout<<"--F_R[10][nx_ - 1].rho_u_flux: "<<F_R[10][nx_ - 1].rho_u_flux<<std::endl;
-        std::cout<<"--F_L[10][nx_].rho_u_flux: "<<F_L[10][nx_].rho_u_flux<<std::endl;
-        std::cout<<"--F_L[10][nx_].rho_u_flux: "<<F_L[10][nx_].rho_u_flux<<std::endl;
-
+            std::cout<<"--F_R[10][nx_ - 1].rho_u_flux: "<<F_R[10][nx_ - 1].rho_u_flux<<std::endl;
+            std::cout<<"--F_R[10][nx_ - 1].rho_u_flux: "<<F_R[10][nx_ - 1].rho_u_flux<<std::endl;
+            std::cout<<"--F_L[10][nx_].rho_u_flux: "<<F_L[10][nx_].rho_u_flux<<std::endl;
+            std::cout<<"--F_L[10][nx_].rho_u_flux: "<<F_L[10][nx_].rho_u_flux<<std::endl;
+        }
 }
 
 double Solver::computedt()
 {
 
-    return dt_ = 1e-5;
+    return dt_ = 1e6;
 
 }
 
@@ -294,7 +323,8 @@ void Solver::integratethroughTime()
             S_eta_R = grid_.getareaEta(  i  , j - 1);
 
             //Debugging
-            if (debug_garbage) {
+            if (debug_garbage) 
+            {
                 if(i == 10 && j == 10)
                 {
                     std::cout<<"--S_vol: "<<S_vol<<std::endl;
@@ -339,7 +369,8 @@ void Solver::integratethroughTime()
            // }
 
             //Debugging
-            if (debug_garbage) {
+            if (debug_garbage) 
+            {
                 if(i == 10 && j == 10)
                 {
                     std::cout<<"--Q_[10][10].rho_u after update: "<<Q1(1)<<std::endl;
@@ -355,7 +386,8 @@ void Solver::integratethroughTime()
             V_[i][j] = convertConstoPrim(Q_[i][j], gamma_);
             
             //Debugging
-            if (debug_garbage) {
+            if (debug_garbage) 
+            {
                 if(i == 10 && j == 10)
                 {
                     std::cout<<"--Q_[10][10].rho_u: "<<Q_[i][j].rho_u<<std::endl;
@@ -385,12 +417,14 @@ void Solver::setup()
     applyICs();
     applyBCs();
 
-    std::cout<<"--V_.u: "<<V_[10][10].u<<std::endl;
-    std::cout<<"--Q_.u: "<<Q_[10][10].rho_u<<std::endl<<std::endl;
 
     if(debug_garbage)
     {
-        exportprimitiveVartoCSV(V_, "primitiveVar.csv");
+
+        std::cout<<"--V_.u: "<<V_[10][10].u<<std::endl;
+        std::cout<<"--Q_.u: "<<Q_[10][10].rho_u<<std::endl<<std::endl;
+
+        exportprimitiveVartoCSV(V_, "primitiveVar.csv", nx_, ny_, 1);
         exit(0);
     }
 
@@ -401,6 +435,7 @@ void Solver::run(int iter)
 {
     
     bool debug_garbage = true;
+    int  print_iter = 100;
 
     for(int i = 1; i < iter; i++)
     {
@@ -472,9 +507,9 @@ void Solver::run(int iter)
         std::cout<<"--V[0][nx - 1].u: "<<V_[0][nx_ - 1].u<<std::endl;
         std::cout<<"--V[0][nx].u: "<<V_[0][nx_].u<<std::endl<<std::endl;
 
-        if(i == 5 && debug_garbage) 
+        if(i == print_iter && debug_garbage) 
         {
-            exportprimitiveVartoCSV(V_, "primitiveVar.csv");
+            exportprimitiveVartoCSV(V_, "primitiveVar.csv", nx_, ny_, 1);
             std::exit(0);
         }
     }

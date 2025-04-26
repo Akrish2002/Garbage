@@ -26,7 +26,8 @@ void performMUSCL(
 
 )
 {
-
+    bool debug_garbage = false;
+    
     //xi direction
     //1. Second order in the interior cells
     for(size_t i = 1; i < ny; i++)
@@ -70,10 +71,14 @@ void performMUSCL(
 
         //Q_xi_R[i][nx].rho_u = 0.5*(Q[i][nx - 2].rho_u + Q[i][nx - 1].rho_u);
     }
-
-    std::cout<<"--Q[10][nx].rho_u: "<<Q[10][nx].rho_u<<std::endl;
-    std::cout<<"--Q_xi_L[10][nx].rho_u: "<<Q_xi_L[10][nx].rho_u<<std::endl;
-    std::cout<<"--Q_xi_R[10][nx].rho_u: "<<Q_xi_R[10][nx].rho_u<<std::endl;
+    
+    //Debugging
+    if(debug_garbage)
+    {
+        std::cout<<"--Q[10][nx].rho_u: "<<Q[10][nx].rho_u<<std::endl;
+        std::cout<<"--Q_xi_L[10][nx].rho_u: "<<Q_xi_L[10][nx].rho_u<<std::endl;
+        std::cout<<"--Q_xi_R[10][nx].rho_u: "<<Q_xi_R[10][nx].rho_u<<std::endl;
+    }
 
     //eta direction
     //1. Second order in the interior cells
@@ -117,7 +122,11 @@ void performMUSCL(
         Q_eta_R[ny][i] = 0.5*(Q[ny - 1][i] + Q[ny][i]);
     }
 
-    std::cout<<"--Q_eta_L[10][nx].rho_u: "<<Q_eta_L[10][nx].rho_u<<std::endl;
-    std::cout<<"--Q_eta_R[10][nx].rho_u: "<<Q_eta_R[10][nx].rho_u<<std::endl;
+    //Debugging
+    if(debug_garbage)
+    {
+        std::cout<<"--Q_eta_L[10][nx].rho_u: "<<Q_eta_L[10][nx].rho_u<<std::endl;
+        std::cout<<"--Q_eta_R[10][nx].rho_u: "<<Q_eta_R[10][nx].rho_u<<std::endl;
+    }
 }
 

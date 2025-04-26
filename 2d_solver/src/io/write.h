@@ -10,6 +10,6 @@
 
 void exportGridToCSV(const std::vector<std::vector<Point>>& pt, std::string fpath);
 void exportScalarFieldToCSV(const std::vector<std::vector<double>>& field, const std::string& fpath);
-void exportprimitiveVartoCSV(const std::vector<std::vector<primitiveVar>>& field, const std::string& fpath);
+void exportprimitiveVartoCSV(const std::vector<std::vector<primitiveVar>>& field, const std::string& fpath, int nx, int ny,int BC);
 
 #endif

@@ -55,7 +55,7 @@ void exportScalarFieldToCSV(const std::vector<std::vector<double>>& field, const
 }
 
 
-void exportprimitiveVartoCSV(const std::vector<std::vector<primitiveVar>>& field, const std::string& fpath)
+void exportprimitiveVartoCSV(const std::vector<std::vector<primitiveVar>>& field, const std::string& fpath, int nx, int ny, int BC)
 {
     std::ofstream file(std::string("output/CSV/") + fpath);
     if (!file.is_open()) {
@@ -63,18 +63,39 @@ void exportprimitiveVartoCSV(const std::vector<std::vector<primitiveVar>>& field
         return;
     }
 
-    const size_t rows = field.size();
-    const size_t cols = field[0].size();
+    if(BC == 0)
+    {
+        const size_t rows = ny ;
+        const size_t cols = nx ;
 
-    file << "rho,u,v,T,P\n";
-    for (size_t i = 0; i < rows; ++i) {
-        for (size_t j = 0; j < cols; ++j) {
-            const primitiveVar& V = field[i][j];
-            file << V.rho << ','
-                 << V.u   << ','
-                 << V.v   << ','
-                 << V.T   << ','
-                 << V.P   << '\n';
+        //file << "rho,u,v,T,P\n";
+        for (size_t i = 1; i < rows; ++i) {
+            for (size_t j = 1; j < cols; ++j) {
+                const primitiveVar& V = field[i][j];
+                file << V.rho << ','
+                     << V.u   << ','
+                     << V.v   << ','
+                     << V.T   << ','
+                     << V.P   << '\n';
+            }
+        }
+    }
+
+    if(BC == 1)
+    {
+        const size_t rows = ny + 1 ;
+        const size_t cols = nx + 1;
+
+        //file << "rho,u,v,T,P\n";
+        for (size_t i = 0; i < rows; ++i) {
+            for (size_t j = 0; j < cols; ++j) {
+                const primitiveVar& V = field[i][j];
+                file << V.rho << ','
+                     << V.u   << ','
+                     << V.v   << ','
+                     << V.T   << ','
+                     << V.P   << '\n';
+            }
         }
     }
 

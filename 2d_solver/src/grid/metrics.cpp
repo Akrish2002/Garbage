@@ -48,9 +48,9 @@ void Grid::computeProjCellFaceArea()
 //    std::cout<<"\n--Size of S_xi_2D: "<<S_xi_2D.size()<<" "<<S_xi_2D[0].size()<<std::endl;
 
     double x_eta, y_eta;
-    for(size_t i = 0; i < S_xi_2D.size() - 1; i++)
+    for(int i = 0; i < ny - 1/*S_xi_2D.size() - 1*/; i++)
     {
-        for(size_t j = 0; j < S_xi_2D[0].size(); j++)
+        for(int j = 0; j < nx /*S_xi_2D[0].size()*/; j++)
         {
             x_eta = n_2D[i + 1][j].x - n_2D[i][j].x;     
             y_eta = n_2D[i + 1][j].y - n_2D[i][j].y;      
@@ -63,15 +63,35 @@ void Grid::computeProjCellFaceArea()
     }  
   
     double x_xi, y_xi;
-    for(size_t j = 0; j < S_eta_2D[0].size() - 1; j++)
+    
+    bool debug_garbage = true;
+
+    for(int j = 0; j < nx - 1/*S_eta_2D[0].size() - 1*/; j++)
     {
-        for(size_t i = 0; i < S_eta_2D.size(); i++)
+        for(int i = 0; i < ny/*S_eta_2D.size()*/; i++)
         {
             x_xi = n_2D[i][j + 1].x - n_2D[i][j].x;     
             y_xi = n_2D[i][j + 1].y - n_2D[i][j].y;      
 
             S_eta_x_2D[i][j] = -1 * y_xi;
             S_eta_y_2D[i][j] =  1 * x_xi;
+
+            //Debugging
+            if(debug_garbage)
+            {
+                if(j == nx - 2 && i == ny - 1)
+                {
+                    std::cout<<"--[0].size: "<<S_eta_2D[0].size()<<std::endl;
+                    std::cout<<"--[0].size - 2: "<<S_eta_2D[0].size() - 2<<std::endl;
+                    std::cout<<"--nx: "<<nx<<std::endl;
+                    std::cout<<"--nx - 2: "<<nx - 2<<std::endl;
+
+                    std::cout<<"S_eta_x_2D[ny - 1][nx - 2]: "<<S_eta_x_2D[i][j]<<std::endl; 
+                    std::cout<<"S_eta_y_2D[ny - 1][nx - 2]: "<<S_eta_y_2D[i][j]<<std::endl; 
+
+                }
+            }
+
             S_eta_2D[i][j] = std::sqrt(x_xi * x_xi + y_xi * y_xi);
         }
   
@@ -106,9 +126,9 @@ void Grid::avgtoCellCenter()
 //   std::cout<<"--CF eta sizes: "<<S_eta_2D.size()<<" "<<S_eta_2D[0].size()<<std::endl; 
 
     //S_xi avg
-    for(size_t i = 0; i < S_xi_2D.size(); i++)
+    for(int i = 0; i < ny - 1 /*S_xi_2D.size()*/; i++)
     {
-        for(size_t j = 0; j < S_xi_2D[0].size() - 1; j++)
+        for(int j = 0; j < nx - 1 /*S_xi_2D[0].size() - 1*/; j++)
         {
             cc_xi_eta_2D[i][j].x = (S_xi_2D[i][j + 1] + S_xi_2D[i][j]) * 0.5;
             nc_2D[i][j].x = (n_2D[i][j + 1].x + n_2D[i][j].x) * 0.5;

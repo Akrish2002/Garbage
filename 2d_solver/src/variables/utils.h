@@ -133,9 +133,8 @@ void computeXiFlux
     
     int nx,
     int ny,
-    double gamma,
 
-    bool debug_garbage = false
+    double gamma
 );
 
 
@@ -148,6 +147,7 @@ void computeEtaFlux
 
     int nx,
     int ny,
+
     double gamma
 );
 

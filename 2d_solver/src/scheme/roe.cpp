@@ -89,7 +89,8 @@ void performRoe
     int nx = grid_.getnx();
     int ny = grid_.getny();
    
-
+    bool debug_garbage = false;
+    
     //Running the loop to perform flux reconstruction at the faces
     
     //xi direction
@@ -145,11 +146,14 @@ void performRoe
             E_[i][j] = convertVectofluxVar(E_vec);
             
             //Debugging
-            if(i == 10 && j == 10)
+            if(debug_garbage)
             {
+                if(i == 10 && j == 10)
+                {
 
-                std::cout<<"--E_[10][10].rho_u_flux: "<<E_[i][j].rho_u_flux<<std::endl;
-            
+                    std::cout<<"--E_[10][10].rho_u_flux: "<<E_[i][j].rho_u_flux<<std::endl;
+                
+                }
             }
         
         }
@@ -208,11 +212,14 @@ void performRoe
             //2.2 Converting column vector back to struct form
             F_[j][i] = convertVectofluxVar(F_vec);
         
-            if(i == 10 && j == 10)
+            //Debugging
+            if(debug_garbage)
             {
+                if(i == 10 && j == 10)
+                {
 
-                std::cout<<"--F_[10][10].rho_u_flux: "<<F_[i][j].rho_u_flux<<std::endl;
-            
+                    std::cout<<"--F_[10][10].rho_u_flux: "<<F_[i][j].rho_u_flux<<std::endl;
+                } 
             }
         }
     }
