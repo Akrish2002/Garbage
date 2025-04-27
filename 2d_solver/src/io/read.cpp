@@ -25,7 +25,7 @@ void read(
     std::cout<<"\n--Reading file"<<std::endl;
 
     if(!grid_file.is_open()){
-        std::cerr<<"Error opening file"<<std::endl;
+        std::cerr<<"--Error opening file"<<std::endl<<std::endl;
     }
 
     //Reading first line

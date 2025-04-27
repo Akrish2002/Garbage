@@ -40,10 +40,10 @@ Solver::Solver(
     Cp_     =   Cp;
     R_      =   R;
     
-    P_ = P;
-    T_ = T;
-    c_ = c;
-    M_ = M;
+    P_      =   P;
+    T_      =   T;
+    c_      =   c;
+    M_      =   M;
     
     rho_    =   rho;
     u_      =   u;
@@ -103,6 +103,8 @@ Solver::Solver(
 void Solver::applyICs()
 {
     
+    bool debug_garbage = false;
+
     for(size_t i = 0; i < ny_ + 1; i++)
     {
         for(size_t j = 0; j < nx_ + 1; j++)
@@ -132,7 +134,10 @@ void Solver::applyICs()
         }
     }
     
-    std::cout<<"--Applied initial conditions\n";
+    if(debug_garbage)
+    {
+        std::cout<<"--Applied initial conditions\n";
+    }
 
 }
 
@@ -398,7 +403,6 @@ void Solver::integratethroughTime()
                 }
             }
 
-            //Q1[i][j] = Q_[i][j] 
 
         }
     }
@@ -406,18 +410,21 @@ void Solver::integratethroughTime()
 }
 
 //-----------------------------------------------------------
-//1. Read grid
-//   Construct halo cells
-//   Compute metrics
-//   Initialize field and BCs
+//0. 
+//Read grid
+//Construct halo cells
+//Compute metrics
+//Initialize field and BCs
 void Solver::setup()
 {
 
     bool debug_garbage = false;
 
     applyICs();
-    applyBCs();
+    std::cout<<"--Applied initial conditions\n";
 
+    applyBCs();
+    std::cout<<"--Applied boundary conditions\n\n";
 
     if(debug_garbage)
     {
@@ -432,7 +439,7 @@ void Solver::setup()
 }
 
 
-void Solver::run(int iter)
+void Solver::run(int iter, const std::string& file_name)
 {
     
     bool debug_garbage = true;
@@ -443,10 +450,11 @@ void Solver::run(int iter)
     
         std::cout<<"--Iter: "<<i<<"\n";
 
-        //1. Interpolate flux values from center to face
+        //1. 
+        //Interpolate flux values from center to face
         //Not including limiter, since default is minmod
 
-        std::cout<<"///////////////////////\n";
+        std::cout<<"////////////////////////////////////\n";
 
         std::cout<<"--Starting MUSCL interpolation \n";
         performMUSCL
@@ -460,7 +468,7 @@ void Solver::run(int iter)
         );
         
 
-        std::cout<<"------------------------------------\n";
+        std::cout<<"-----------------------------------------------------\n";
 
         //2.
         
@@ -470,7 +478,7 @@ void Solver::run(int iter)
         std::cout<<"--Computing flux on all faces from interpolated Q \n";
         computeFlux();
        
-        std::cout<<"------------------------------------\n";
+        std::cout<<"-----------------------------------------------------\n";
 
         //2.2 
         //Perform Roe
@@ -491,28 +499,39 @@ void Solver::run(int iter)
             gamma_
         );
         
-        std::cout<<"------------------------------------\n";
+        std::cout<<"-----------------------------------------------------\n";
         
         //3.
         std::cout<<"--Integrating through time \n";
         integratethroughTime();
 
-        std::cout<<"------------------------------------\n";
+        std::cout<<"-----------------------------------------------------\n";
         
         //4.
         std::cout<<"--Reapplying BCs \n";
         applyBCs();
         
-        std::cout<<"------------------------------------\n";
+        std::cout<<"-----------------------------------------------------\n";
 
         std::cout<<"--V[0][nx - 1].u: "<<V_[0][nx_ - 1].u<<std::endl;
-        std::cout<<"--V[0][nx].u: "<<V_[0][nx_].u<<std::endl<<std::endl;
+        std::cout<<"--V[0][nx].u: "<<V_[0][nx_].u<<std::endl;
 
-        if(i == print_iter && debug_garbage) 
+        std::cout<<"-----------------------------------------------------\n";
+
+        if(i % 25 == 0 || i == 1)
         {
-            exportprimitiveVartoCSV(V_, "primitiveVar.csv", nx_, ny_, 1);
-            std::exit(0);
+            std::string file_name_iteration = file_name + "_" + std::to_string(i) + ".csv";
+            exportprimitiveVartoCSV(V_, file_name_iteration, nx_, ny_, 1);
+
+
+            if(i == print_iter && debug_garbage) 
+            {
+                std::exit(0);
+            }
         }
+
+        std::cout<<std::endl;        
+
     }
 
 }

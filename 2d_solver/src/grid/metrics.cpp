@@ -64,7 +64,7 @@ void Grid::computeProjCellFaceArea()
   
     double x_xi, y_xi;
     
-    bool debug_garbage = true;
+    bool debug_garbage = false;
 
     for(int j = 0; j < nx - 1/*S_eta_2D[0].size() - 1*/; j++)
     {

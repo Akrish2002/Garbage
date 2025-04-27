@@ -65,7 +65,7 @@ class Solver
         //Read grid, build halo and compute metrics
         void setup();
         
-        void run(int iter);
+        void run(int iter, const std::string& file_name);
         
         void writeResults();
 
