@@ -42,7 +42,7 @@ int main()
     double kappa    = 0;
  
     //Iterations
-    double N = 1000;
+    double N = 13600;
     double CFL = 0.5;
     
 //------------------------------------------------------------------------//

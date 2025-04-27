@@ -55,7 +55,8 @@ Solver::Solver(
     kappa_      = kappa;
     N_          = N;
     CFL_        = CFL;
-
+    dt_         = 1e-9;
+    
 //-------------------------------------------------------------------------------------------------------------
 
     grid_.addHaloCells_2D();
@@ -435,7 +436,7 @@ void Solver::run(int iter)
 {
     
     bool debug_garbage = true;
-    int  print_iter = 100;
+    int  print_iter = N_;
 
     for(int i = 1; i < iter; i++)
     {
