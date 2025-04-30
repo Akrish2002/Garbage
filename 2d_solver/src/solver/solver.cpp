@@ -28,7 +28,9 @@ Solver::Solver(
                                    
                     const double epsilon, const double kappa,
                     const double N, 
-                    const double CFL
+                    const double CFL,
+                    const double dt,
+                    const std::string t
 
                 ):grid_(gridpath)
 {
@@ -55,8 +57,9 @@ Solver::Solver(
     kappa_      = kappa;
     N_          = N;
     CFL_        = CFL;
-    dt_         = 1e-9;
-    
+    dt_         = dt;
+    t_          = t;    
+
 //-------------------------------------------------------------------------------------------------------------
 
     grid_.addHaloCells_2D();
@@ -69,6 +72,9 @@ Solver::Solver(
 //-------------------------------------------------------------------------------------------------------------
 
     //Initialize the sizes of; 
+
+    //dtv
+    allocate_2D(ny_ + 1, nx_ + 1, dtv_); //For local time step
 
     //Q
     allocate_2D(ny_ + 1, nx_ + 1, Q_); //Including Halo cells
@@ -105,9 +111,9 @@ void Solver::applyICs()
     
     bool debug_garbage = false;
 
-    for(size_t i = 0; i < ny_ + 1; i++)
+    for(int i = 0; i < ny_ + 1; i++)
     {
-        for(size_t j = 0; j < nx_ + 1; j++)
+        for(int j = 0; j < nx_ + 1; j++)
         {
             V_inf_[i][j].rho    =   rho_;
             V_inf_[i][j].u      =   u_;
@@ -146,21 +152,21 @@ void Solver::applyBCs()
 {
     
     //Supersonic Inlet
-    for(size_t i = 0; i < ny_ + 1; i++)
+    for(int i = 0; i < ny_ + 1; i++)
     {
         V_[i][0] = V_inf_[i][0];
         Q_[i][0] = convertPrimtoCons(V_inf_[i][0]);
     }
    
     //Supersonic Outlet 
-    for(size_t i = 0; i < ny_ + 1; i++)
+    for(int i = 0; i < ny_ + 1; i++)
     {
         V_[i][nx_] = V_inf_[i][nx_ - 1];
         Q_[i][nx_] = convertPrimtoCons(V_inf_[i][nx_ - 1]);
     }
 
     //Slip Wall + Adiabatic
-    for(size_t i = 1; i < nx_; i++) 
+    for(int i = 1; i < nx_; i++) 
     {
         double S_eta_x;
         double S_eta_y;
@@ -299,12 +305,77 @@ void Solver::computeFlux()
         }
 }
 
-double Solver::computedt()
+void Solver::computedt()
 {
 
-    return dt_ = 1e6;
+    bool debug_garbage_x = true;
 
+    if(t_ == "LOCAL")
+    {
+        for(int i = 0; i < ny_ - 1; i++)
+        {
+            for(int j = 0; j < nx_ - 1; j++)
+            {
+                double rho_xi;       
+                double c;
+                
+                //S_xi_x --> S_xi_x / | S_xi |  
+                //S_xi_y --> S_xi_y / | S_xi |  
+                double S_xi_x = 0.5 * (grid_.getnxXi(i, j) * grid_.getareaXi(i, j) + grid_.getnxXi(i, j + 1) 
+                                                                                 * grid_.getareaXi(i, j + 1));
+                double S_xi_y = 0.5 * (grid_.getnyXi(i, j) * grid_.getareaXi(i, j) + grid_.getnyXi(i, j + 1)  
+                                                                                 * grid_.getareaXi(i, j + 1));
+                double S_xi   = std::sqrt(S_xi_x * S_xi_x + S_xi_y * S_xi_y);
+                c = std::sqrt(gamma_ * R_ * V_[i + 1][j + 1].T);
+
+                rho_xi = std::fabs((S_xi_x * V_[i + 1][j + 1].u) / S_xi + (S_xi_y * V_[i + 1][j + 1].v) / S_xi) + c;
+
+                dtv_[i + 1][j + 1].x = (CFL_ * grid_.getVol(i + 1, j + 1)) / (rho_xi * S_xi);
+                    
+                if(debug_garbage_x && i == ny_ - 2 && j == nx_ - 2)
+                {
+                    std::cout<<"--dtv_[ny_ - 2].x: "<<dtv_[i][j].x<<std::endl;
+                }
+                
+             }
+        }
+                
+        bool debug_garbage_y = false;           
+
+        for(int i = 0; i < nx_ - 1; i++)
+        {
+            for(int j = 0; j < ny_ - 1; j++)
+            {
+                 
+                double rho_eta;       
+                double c;
+
+                double S_eta_x = 0.5 * (grid_.getnxEta(j, i) * grid_.getareaEta(j, i) + grid_.getnxEta(j + 1, i) 
+                                                                                    * grid_.getareaEta(j + 1, i));
+                double S_eta_y = 0.5 * (grid_.getnyEta(j, i) * grid_.getareaEta(j, i) + grid_.getnyEta(j + 1, i) 
+                                                                                    * grid_.getareaEta(j + 1, i));
+                double S_eta   = std::sqrt(S_eta_x * S_eta_x + S_eta_y * S_eta_y);
+                c = std::sqrt(gamma_ * R_ * V_[j + 1][i + 1].T);
+
+                rho_eta = std::fabs((S_eta_x * V_[j + 1][i + 1].u) / S_eta + (S_eta_y * V_[j + 1][i + 1].v) / S_eta) + c;
+
+                dtv_[j + 1][i + 1].y = (CFL_ * grid_.getVol(j + 1, i + 1)) / (rho_eta * S_eta);
+
+                if(debug_garbage_y && i == nx_ - 2) 
+                {
+                    std::cout<<"dtv_.y: "<<dtv_[j][i].y<<std::endl;
+                }
+            }
+        }
+    }
+
+    else if(t_ == "GLOBAL")
+    {
+        std::cout<<"--Integrating through time globally \n";
+    }
+    
 }
+
 
 void Solver::integratethroughTime()
 {
@@ -314,9 +385,9 @@ void Solver::integratethroughTime()
 
     bool debug_garbage = false;
 
-    for(size_t i = 1; i < ny_; i++)
+    for(int i = 1; i < ny_; i++)
     {
-        for(size_t j = 1; j < nx_; j++)
+        for(int j = 1; j < nx_; j++)
         {
             Vec4 Q, Q1;
             Vec4 E_L, E_R;
@@ -364,15 +435,24 @@ void Solver::integratethroughTime()
                 }
             }
 
-            Q1 = Q - dt_ * ((E_R*S_xi_R - E_L*S_xi_L) + (F_R*S_eta_R - F_L*S_eta_L)) / S_vol; 
+            if(t_ == "LOCAL")
+            {
+                double dtv = std::fmin(dtv_[i][j].x, dtv_[i][j].y);
+                Q1 = Q - dtv * ((E_R*S_xi_R - E_L*S_xi_L) + (F_R*S_eta_R - F_L*S_eta_L)) / S_vol; 
+            }
+
+            else if(t_ == "GLOBAL")
+            {
+                Q1 = Q - dt_ * ((E_R*S_xi_R - E_L*S_xi_L) + (F_R*S_eta_R - F_L*S_eta_L)) / S_vol; 
+            }
 
             //Debugging
-           // if (debug_garbage) {
-           //     if(i == 10 && j == 10)
-           //     {
-           //         std::cout<<"--asdf: \n"<<E_R*S_xi_R<<std::endl;
-           //     }
-           // }
+            if (debug_garbage) {
+                if(i == 10 && j == 10)
+                {
+                    std::cout<<"--asdf: \n"<<E_R*S_xi_R<<std::endl;
+                }
+            }
 
             //Debugging
             if (debug_garbage) 
@@ -502,7 +582,25 @@ void Solver::run(int iter, const std::string& file_name)
         std::cout<<"-----------------------------------------------------\n";
         
         //3.
-        std::cout<<"--Integrating through time \n";
+        //3.0
+        if(t_ == "LOCAL")
+        {
+            std::cout<<"--Computing local time step \n";
+            computedt();
+
+            std::cout<<"-----------------------------------------------------\n";
+
+            std::cout<<"--Integrating through time locally \n";
+            
+        }
+       
+        else
+        {
+            computedt();
+            //Returns print statement
+        } 
+
+        //3.1
         integratethroughTime();
 
         std::cout<<"-----------------------------------------------------\n";

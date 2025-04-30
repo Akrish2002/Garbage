@@ -20,6 +20,8 @@ class Solver
         double N_;
         double CFL_;
         double dt_;
+        std::vector<std::vector<Point>> dtv_;
+        std::string t_;
 
         Grid grid_;
         int nx_, ny_;
@@ -42,7 +44,7 @@ class Solver
         void    applyICs();
         void    applyBCs();
         void    computeFlux();
-        double  computedt();
+        void    computedt();
         void    computeResiduals();
         void    integratethroughTime();
 
@@ -59,7 +61,9 @@ class Solver
                                    
                     const double epsilon, const double kappa,
                     const double N, 
-                    const double CFL
+                    const double CFL,
+                    const double dt,
+                    const std::string t
                 );
         
         //Read grid, build halo and compute metrics
