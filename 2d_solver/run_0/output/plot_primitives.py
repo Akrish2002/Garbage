@@ -4,8 +4,7 @@ import matplotlib.pyplot as plt
 ## Grid dimensions
 ny, nx = 65 + 1, 641 + 1
 
-# === Load u velocity field ===
-# Columns: [S_xi, S_eta]
+# === Load primitives ===
 data = np.loadtxt("CSV/primitiveVar.csv", delimiter=",")
 rho = data[:, 0].reshape((ny, nx))
 u   = data[:, 1].reshape((ny, nx))
@@ -32,8 +31,13 @@ def plot_contour(x, y, field, title, filename, cmap="viridis", vmin=None, vmax=N
     plt.savefig(f"plots/{filename}.png")
     plt.show()
 
-# === Plot u ===
-plot_contour(x, y, u, title="Contour of $u$", filename="contour_u")
+# === Plot primitives ===
+plot_contour(x, y, rho, title="Contour of $rho$", filename="contour_rho")
 
+plot_contour(x, y, u, title="Contour of $u$", filename="contour_u")
 plot_contour(x, y, v, title="Contour of $v$", filename="contour_v")
+
+plot_contour(x, y, T, title="Contour of $T$", filename="contour_T")
+
+plot_contour(x, y, P, title="Contour of $P$", filename="contour_P")
 
