@@ -28,6 +28,7 @@ Solver::Solver(
                                    
                     const double epsilon, const double kappa,
                     const double N, 
+                    const double NF,
                     const double CFL,
                     const double dt,
                     const std::string t
@@ -56,6 +57,7 @@ Solver::Solver(
     epsilon_    = epsilon;
     kappa_      = kappa;
     N_          = N;
+    NF_         = NF;
     CFL_        = CFL;
     dt_         = dt;
     t_          = t;    
@@ -78,7 +80,7 @@ Solver::Solver(
 
     //Q
     allocate_2D(ny_ + 1, nx_ + 1, Q_); //Including Halo cells
-    allocate_2D(ny_ + 1, nx_ + 1, Q_1); 
+    allocate_2D(ny_ + 1, nx_ + 1, Q1_); 
 
     allocate_2D(ny_ + 1, nx_ + 1, Q_xi_L);
     allocate_2D(ny_ + 1, nx_ + 1, Q_xi_R);
@@ -137,9 +139,14 @@ void Solver::applyICs()
             Q_[i][j].rho_u   =   rho_ * u_;
             Q_[i][j].rho_v   =   rho_ * v_;
             Q_[i][j].rho_et  =   rho_ * et_;
+            
+            Q1_[i][j].rho     =   rho_;
+            Q1_[i][j].rho_u   =   rho_ * u_;
+            Q1_[i][j].rho_v   =   rho_ * v_;
+            Q1_[i][j].rho_et  =   rho_ * et_;
         }
     }
-    
+
     if(debug_garbage)
     {
         std::cout<<"--Applied initial conditions\n";
@@ -152,21 +159,23 @@ void Solver::applyBCs()
 {
     
     //Supersonic Inlet
-    for(int i = 0; i < ny_ + 1; i++)
+    for(int i = 1 /*0*/; i < ny_; i++)
     {
-        V_[i][0] = V_inf_[i][0];
-        Q_[i][0] = convertPrimtoCons(V_inf_[i][0]);
+        Q1_[i][0] = Q_[i][0];
+        //V_[i][0] = V_inf_[i][0];
+        //Q_[i][0] = convertPrimtoCons(V_inf_[i][0]);
     }
    
     //Supersonic Outlet 
-    for(int i = 0; i < ny_ + 1; i++)
+    for(int i = 1 /*0*/; i < ny_; i++)
     {
-        V_[i][nx_] = V_inf_[i][nx_ - 1];
-        Q_[i][nx_] = convertPrimtoCons(V_inf_[i][nx_ - 1]);
+        Q1_[i][nx_] = Q_[i][nx_ - 1];
+        //V_[i][nx_] = V_inf_[i][nx_ - 1];
+        //Q_[i][nx_] = convertPrimtoCons(V_inf_[i][nx_ - 1]);
     }
 
     //Slip Wall + Adiabatic
-    for(int i = 1; i < nx_; i++) 
+    for(int i = 0; i < nx_ ; i++) 
     {
         double S_eta_x;
         double S_eta_y;
@@ -182,6 +191,15 @@ void Solver::applyBCs()
         S_eta_x_2 = S_eta_x * S_eta_x;
         S_eta_y_2 = S_eta_y * S_eta_y;
  
+        //Debugging 
+        if(debug_garbage && i == 0)
+        {
+            std::cout<<"--Lower BCs\n";
+            std::cout<<"--S_eta_x[0, i - 1]: "<<S_eta_x<<std::endl;
+            std::cout<<"--S_eta_y[0, i - 1]: "<<S_eta_y<<std::endl;
+            
+        }
+
         V_[0][i].u = ((S_eta_x_2 - S_eta_y_2) * V_[1][i].u - (2 * S_eta_x * S_eta_y) * V_[1][i].v)
                      / (S_eta_x_2 + S_eta_y_2);
 
@@ -208,6 +226,7 @@ void Solver::applyBCs()
             
         }
 
+
         V_[ny_][i].u = ((S_eta_x_2 - S_eta_y_2) * V_[ny_ - 1][i].u - (2 * S_eta_x * S_eta_y) * V_[ny_ - 1][i].v)
                      / (S_eta_x_2 + S_eta_y_2);
 
@@ -224,7 +243,7 @@ void Solver::applyBCs()
 
             std::cout<<"--V_[ny_ - 1][i].T: "<<V_[ny_ - 1][i].T<<std::endl;
             
-            exit(0);
+            //exit(0);
         }
 
         Q_[ny_][i] = convertPrimtoCons(V_[ny_ - 1][i]); 
@@ -308,7 +327,7 @@ void Solver::computeFlux()
 void Solver::computedt()
 {
 
-    bool debug_garbage_x = true;
+    bool debug_garbage_x = false;
 
     if(t_ == "LOCAL")
     {
@@ -334,7 +353,11 @@ void Solver::computedt()
                     
                 if(debug_garbage_x && i == ny_ - 2 && j == nx_ - 2)
                 {
-                    std::cout<<"--dtv_[ny_ - 2].x: "<<dtv_[i][j].x<<std::endl;
+                    std::cout<<"--dtv_[ny_ - 2][nx_ - 2].x: "<<dtv_[ny_ - 2][nx_ - 2].x<<std::endl;
+                    std::cout<<"--dtv_[1][0].x: "<<dtv_[1][0].x<<std::endl;
+                    std::cout<<"--dtv_[0][nx_].x: "<<dtv_[0][nx_].x<<std::endl;
+
+                    exportGridToCSV(dtv_, "LocalTimeStep.csv");
                 }
                 
              }
@@ -438,6 +461,7 @@ void Solver::integratethroughTime()
             if(t_ == "LOCAL")
             {
                 double dtv = std::fmin(dtv_[i][j].x, dtv_[i][j].y);
+                if(dtv < 0) std::cout<<"--Less than zero dtv encountered \n";
                 Q1 = Q - dtv * ((E_R*S_xi_R - E_L*S_xi_L) + (F_R*S_eta_R - F_L*S_eta_L)) / S_vol; 
             }
 
@@ -447,45 +471,125 @@ void Solver::integratethroughTime()
             }
 
             //Debugging
-            if (debug_garbage) {
+            if(debug_garbage) 
+            {
                 if(i == 10 && j == 10)
                 {
                     std::cout<<"--asdf: \n"<<E_R*S_xi_R<<std::endl;
                 }
             }
 
-            //Debugging
-            if (debug_garbage) 
-            {
-                if(i == 10 && j == 10)
-                {
-                    std::cout<<"--Q_[10][10].rho_u after update: "<<Q1(1)<<std::endl;
-                    
-                    //exit(0);
-                }
-            }
 
-            // Compute residual here:
+            Q1_[i][j] = convertVectoconsVar(Q1);
+            
 
             // Update next iteration
-            Q_[i][j] = convertVectoconsVar(Q1);
+            //Q_[i][j] = convertVectoconsVar(Q1);
+            //V_[i][j] = convertConstoPrim(Q_[i][j], gamma_);
+            //
+            ////Debugging
+            //if(debug_garbage) 
+            //{
+            //    if(i == 1 && j == nx_ - 1)
+            //    {
+            //        std::cout<<"--Q_[1][nx_ - 1].rho_u: "<<Q_[i][j].rho_u<<std::endl;
+            //        std::cout<<"--V_[1][nx_ - 1].u: "<<V_[i][j].u<<std::endl;
+
+            //        //exit(0);
+            //    }
+            //}
+        }
+    }
+
+    
+    // Compute residual here:
+    computeL_2();
+    //computeL_infty();
+
+    //Applying BCs
+    std::cout<<"--Reapplying BCs \n";
+    applyBCs();
+    
+    for(int i = 1; i < ny_; i++)
+    {
+        for(int j = 1; j < nx_; j++)
+        {
+            Q_[i][j] = Q1_[i][j];
             V_[i][j] = convertConstoPrim(Q_[i][j], gamma_);
+        }
+    }
             
-            //Debugging
-            if (debug_garbage) 
-            {
-                if(i == 10 && j == 10)
-                {
-                    std::cout<<"--Q_[10][10].rho_u: "<<Q_[i][j].rho_u<<std::endl;
-                    std::cout<<"--V_[10][10].u: "<<V_[i][j].u<<std::endl;
 
-                    //exit(0);
-                }
-            }
+}
 
+void Solver::computeL_2()
+{
+
+    for(int i = 1; i < ny_; ++i) 
+    {
+        for(int j = 1; j < nx_; ++j) 
+        {
+           // const auto& qn  = Q_[i][j];
+           // const auto& qnp = Q1_[i][j];
+    
+            double d0 = Q1_[i][j].rho    - Q_[i][j].rho;
+            double d1 = Q1_[i][j].rho_u  - Q_[i][j].rho_u;
+            double d2 = Q1_[i][j].rho_v  - Q_[i][j].rho_v;
+            double d3 = Q1_[i][j].rho_et - Q_[i][j].rho_et;
+    
+            L2[0] += d0*d0;
+            L2[1] += d1*d1;
+            L2[2] += d2*d2;
+            L2[3] += d3*d3;
+        }
+    }
+
+    for(int l=0; l<4; ++l)
+    {
+        L2[l] = std::sqrt(L2[l]);
+    }
+
+    const double rho_ref = 0.18759; 
+    L2[0] /=  rho_ref;
+    L2[1] /= (rho_ref * 885.13); 
+    L2[2] /= (rho_ref * 885.13);
+    L2[3] /= (rho_ref * 295.04 * 295.04);
+
+}
+
+void Solver::computeL_infty()
+{
+
+    for(int i = 1; i < nx_; ++i) 
+    {
+        for(int j = 1; j < ny_; ++j) 
+        {
+            const auto& qn  = Q_[i][j];
+            const auto& qnp = Q1_[i][j];
+    
+            double d0 = qnp.rho   - qn.rho;
+            double d1 = qnp.rho_u - qn.rho_u;
+            double d2 = qnp.rho_v - qn.rho_v;
+            double d3 = qnp.rho_et     - qn.rho_et;
+    
+            Linf[0] += d0*d0;
+            Linf[1] += d1*d1;
+            Linf[2] += d2*d2;
+            Linf[3] += d3*d3;
+
+            Linf[0] = std::max(Linf[0], std::abs(qnp.rho   - qn.rho));
+            Linf[1] = std::max(Linf[1], std::abs(qnp.rho_u - qn.rho_u));
+            Linf[2] = std::max(Linf[2], std::abs(qnp.rho_v - qn.rho_v));
+            Linf[3] = std::max(Linf[3], std::abs(qnp.rho_et     - qn.rho_et));
 
         }
     }
+
+    const double rho_ref = 0.18759; 
+    Linf[0] /=  rho_ref;
+    Linf[1] /= (rho_ref * 885.13); 
+    Linf[2] /= (rho_ref * 885.13);
+    Linf[3] /= (rho_ref * 295.04 * 295.04);
 
 }
 
@@ -513,7 +617,7 @@ void Solver::setup()
         std::cout<<"--Q_.u: "<<Q_[10][10].rho_u<<std::endl<<std::endl;
 
         exportprimitiveVartoCSV(V_, "primitiveVar.csv", nx_, ny_, 1);
-        exit(0);
+        //exit(0);
     }
 
 }
@@ -522,9 +626,10 @@ void Solver::setup()
 void Solver::run(int iter, const std::string& file_name)
 {
     
-    bool debug_garbage = true;
+    bool debug_garbage = false;
     int  print_iter = N_;
-
+    int  final_iter = NF_;
+    
     for(int i = 1; i < iter; i++)
     {
     
@@ -603,29 +708,38 @@ void Solver::run(int iter, const std::string& file_name)
         //3.1
         integratethroughTime();
 
-        std::cout<<"-----------------------------------------------------\n";
         
         //4.
-        std::cout<<"--Reapplying BCs \n";
-        applyBCs();
+        //Computed norms, reapplied BCs and updated Q to Q1_ in that order in 
+        //integrate through time
+        //std::cout<<"--Reapplying BCs \n";
+        //applyBCs();
         
         std::cout<<"-----------------------------------------------------\n";
 
-        std::cout<<"--V[0][nx - 1].u: "<<V_[0][nx_ - 1].u<<std::endl;
-        std::cout<<"--V[0][nx].u: "<<V_[0][nx_].u<<std::endl;
+        std::cout<<"--L_2 norm: "<<L2[0]<<std::endl;
+        std::cout<<"--L_2 norm: "<<L2[1]<<std::endl;
+        std::cout<<"--L_2 norm: "<<L2[2]<<std::endl;
+        std::cout<<"--L_2 norm: "<<L2[3]<<std::endl;
+
+        std::cout<<"--L_infty norm: "<<Linf[0]<<std::endl;
+
+       // std::cout<<"--V[0][1].u: "<<V_[0][1].u<<std::endl;
+       // std::cout<<"--V[0][nx - 2].u: "<<V_[0][nx_ - 2].u<<std::endl;
+       // std::cout<<"--V[0][nx - 1].u: "<<V_[0][nx_ - 1].u<<std::endl;
+       // std::cout<<"--V[0][nx].u: "<<V_[0][nx_].u<<std::endl;
 
         std::cout<<"-----------------------------------------------------\n";
 
-        if(i % 25 == 0 || i == 1)
+        if(i % print_iter == 0 || i == 1)
         {
             std::string file_name_iteration = file_name + "_" + std::to_string(i) + ".csv";
             exportprimitiveVartoCSV(V_, file_name_iteration, nx_, ny_, 1);
+        }
 
-
-            if(i == print_iter && debug_garbage) 
-            {
-                std::exit(0);
-            }
+        if(i == final_iter)  
+        {
+            std::exit(0);
         }
 
         std::cout<<std::endl;        

@@ -26,7 +26,7 @@ void performMUSCL(
 
 )
 {
-    bool debug_garbage = true;
+    bool debug_garbage = false;
     
     //xi direction
     //1. Second order in the interior cells

@@ -18,6 +18,7 @@ class Solver
 
         double epsilon_, kappa_;
         double N_;
+        double NF_;
         double CFL_;
         double dt_;
         std::vector<std::vector<Point>> dtv_;
@@ -27,7 +28,7 @@ class Solver
         int nx_, ny_;
 
         std::vector<std::vector<consVar>> Q_;
-        std::vector<std::vector<consVar>> Q_1;
+        std::vector<std::vector<consVar>> Q1_;
         std::vector<std::vector<consVar>> Q_xi_L, Q_xi_R;
         std::vector<std::vector<consVar>> Q_eta_L, Q_eta_R;
 
@@ -40,6 +41,9 @@ class Solver
         std::vector<std::vector<fluxVar>> F_;
         std::vector<std::vector<fluxVar>> F_L, F_R;
 
+        std::array<double,4> L2{{0,0,0,0}};
+        std::array<double,4> Linf{{0,0,0,0}}; 
+
         //Initialize conditions
         void    applyICs();
         void    applyBCs();
@@ -47,6 +51,8 @@ class Solver
         void    computedt();
         void    computeResiduals();
         void    integratethroughTime();
+        void    computeL_2();
+        void    computeL_infty();
 
     public:
     
@@ -61,6 +67,7 @@ class Solver
                                    
                     const double epsilon, const double kappa,
                     const double N, 
+                    const double NF,
                     const double CFL,
                     const double dt,
                     const std::string t
