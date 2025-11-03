@@ -1,4 +1,4 @@
-# Garbage
+# General
 
 ##  Grid Naming Convention
 
